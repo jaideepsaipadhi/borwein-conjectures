@@ -1,0 +1,3 @@
+PART A: zero coefficients (c=0, allowed): [7]  sign failures 0 []  band failures 0 []  worst corr/|s(m)| = 5.058e-10  |s(i)|<=e^{2sqrt(a i)} on [0,2e5]: True
+PART B: alpha bound for i>=2e5: |s(i)|/e^{2 sqrt(a i)} <= [7.7297e-5 +/- 6.3e-12]
+PART B: sup_{m>=2e5} |c(m)-s(m)| + R  over  |a|min P5 :  Q <= [5.1390e-20 +/- 4.88e-25]

@@ -1,0 +1,8 @@
+PASS A Laplace grid tiling : chunks=36 covered_to=3000.0000 gaps=[] unresolved=0
+PASS B Laplace lower edge : -G'(2.95) in [0.102 +/- 4.56e-4] over eps in [0,1/733]
+PASS C vacuity rule : mu~ = (m-N-1/4)/N^2 >= (N-1/4)/N^2 = eps(1-1/(4N)) >= 0.999 eps for N >= 733
+PASS D Laplace/centre overlap : mu = mu~ + (N+1/4)/N^2 > mu~ >= 0.0985 >= 0.098
+PASS E centre from tables on all xi-balls : balls=74 worst err=0.4905 bad=[]
+PASS F mu<->xi range : mu_N(3.4) <= 0.08862 (<0.098), mu_N(-0.3) >= 0.53111 (>0.5), all N>=733; mu_N decreasing in xi (L''>0)
+PASS G saddle offset within table shifts : max eta=0.0155 bad=[]
+COVERAGE COMPLETE

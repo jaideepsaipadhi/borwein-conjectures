@@ -1,0 +1,15 @@
+piece=4 rect=0 T=40 [2.5631741228718345,2.5731741228718343] OK min margin(N0)=194.63 arbcells=59136 arbfail=0 (54s)
+  sub [2.5631741228718345,2.5731741228718343] OK margin(N0)=194.63 t0=25.488 cells=59136
+/tmp/claude-0/-home-claude/c5296a33-5369-5667-bec9-2ca4e1c510e7/scratchpad/validate/third/offpeak_chunk.py:95: RuntimeWarning: divide by zero encountered in log
+  v = 0.5*np.log(1 - 2*rho*np.cos(ph) + rho*rho).sum(2).max()
+piece=4 rect=1 T=40 [2.5731741228718343,2.5831741228718341] OK min margin(N0)=204.59 arbcells=59136 arbfail=0 (54s)
+  sub [2.5731741228718343,2.5831741228718341] OK margin(N0)=204.59 t0=25.762 cells=59136
+piece=4 rect=2 T=40 [2.5831741228718341,2.5931741228718339] OK min margin(N0)=199.78 arbcells=59136 arbfail=0 (54s)
+  sub [2.5831741228718341,2.5931741228718339] OK margin(N0)=199.78 t0=27.717 cells=59136
+piece=4 rect=3 T=40 [2.5931741228718339,2.6031741228718337] OK min margin(N0)=207.38 arbcells=59136 arbfail=0 (55s)
+  sub [2.5931741228718339,2.6031741228718337] OK margin(N0)=207.38 t0=24.759 cells=59136
+piece=4 rect=4 T=40 [2.6031741228718337,2.6131741228718335] OK min margin(N0)=215.21 arbcells=59136 arbfail=0 (55s)
+  sub [2.6031741228718337,2.6131741228718335] OK margin(N0)=215.21 t0=24.145 cells=59136
+piece=4 rect=5 T=40 [2.6131741228718335,2.6132741228718346] OK min margin(N0)=214.94 arbcells=5632 arbfail=0 (5s)
+  sub [2.6131741228718335,2.6132741228718346] OK margin(N0)=214.94 t0=23.621 cells=5632
+done piece=4 rects 0..5 (277s)

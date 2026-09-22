@@ -1,0 +1,96 @@
+%=====================================================================
+\section{Verification and audit record}\label{app:verification}
+%=====================================================================
+
+This appendix records, in concise form, how the proof of Theorem~B was checked independently, which defects were found,
+and which earlier components were withdrawn. The full reports are in \texttt{third/verification/} of the repository
+(\texttt{REFEREE\_SEC3.md}, \texttt{REFEREE\_FULL.md}, \texttt{AUDIT*.md}, \texttt{AUDIT2\_*.md}, \texttt{GAP\_*.md},
+\texttt{ARB\_F\_RUN.md}). The proof of Theorem~A is documented by its certificates and consistency checks
+(\S\ref{sec:computations}).
+
+\subsection{Independent checks}
+
+\emph{First round.}
+\begin{itemize}
+\item \emph{\S\ref{sec:G5}} (\texttt{REFEREE\_SEC3.md}): independent re-derivation; own \texttt{mpmath} code at $50$ digits;
+$10$ cusps $\times$ $2$ points for~\eqref{eq:G5-grow}/\eqref{eq:G5-ng}; quadrature for Lemma~\ref{lem:bessel-contour};
+exhaustive test $\nu\le5000$ plus $1509$ values up to $200000$. Verdict: correct; three presentational gaps (the passage
+from the Hankel loop to the vertical line, the arc of $0/1$, the regions of deformation), all filled in \S\ref{sec:G5}.
+\item \emph{Band and Laplace, classes $0$--$2$, and coverage} (\texttt{GAP\_AUDIT012.md}): re-derivation, NaN-guarded
+rerun of all tiles, $45$ independent exact points. Sound; two latent flaws fixed.
+\item \emph{Band, classes $3$--$4$}: an earlier audit's findings are repaired in \texttt{GAP\_BAND.md}.
+\item \emph{Laplace, classes $3$--$4$} (\texttt{AUDIT\_LAP34.md}): re-derivation, $6000$-point test of $\varepsilon_g$,
+NaN-guarded rerun, $36$ exact points with independent code. Sound after two fixes.
+\item \emph{Near peak and combination} (\texttt{AUDIT\_CENTRE.md}): re-derivation of the representation, Euler--Maclaurin
+constants, uniformity in $n$, saddle and exact-run logs; exact $P_{5,300}$ comparison. Sound after replacing the
+combination step.
+\item \emph{Off-peak lemma} (\texttt{AUDIT\_OFFPEAK.md}): coverage in $\theta$, uniformity in $n$,
+Lemma~\ref{lem:monoL}, chunk lemma and maximum principle, $312$ exact spot points; Arb version of (F) on $7$ rectangles.
+Sound after cosmetic fixes.
+\end{itemize}
+
+\emph{Second round} (each auditor wrote their findings before reading the first-round report).
+\begin{itemize}
+\item \emph{Band, classes $3$--$4$} (\texttt{AUDIT\_BAND.md}): exact run re-run; $16$ values of $n$ recomputed by a direct
+product avoiding $E_n$ and the coefficient table; pair and triple counts brute-forced; L1 and $\Psi$ recomputed in
+\texttt{mpmath} ($\Psi(10001)=0.19714$). Two cosmetic misstatements. Sound.
+\item \emph{Laplace, classes $3$--$4$} (\texttt{AUDIT2\_LAP34.md}): re-derivation from scratch; complete term inventory
+including the constants of $T_\rho$ against Theorem~\ref{thm:G5}; monotonicity in $X$ at $6$ levels; a third exact method
+(Euler identities modulo primes, CRT), $31$ points up to $n=5000$. No hole. Sound.
+\item \emph{Centre} (\texttt{AUDIT2\_CENTRE.md}): Cauchy decomposition and $\cN$ re-derived; $\mu(2.1)=0.103772$; the thin
+box recomputed in independent Arb code; monotonicity in $n$ up to $10^5$; quadrature validated to $4\cdot10^{-11}$, then
+$120$ points. Findings: the comparison slack $>$ OFF was printed but not asserted (now asserted, Lemma~\ref{lem:comb}); the
+binding box $[2.09,2.10]$ is not needed. Sound.
+\item \emph{Off-peak} (\texttt{AUDIT2\_OFFPEAK.md}): all ingredients re-derived; (N) compared with the exact $j$-series at
+$70$ points; certificates re-run at $N_0=2000$, $10^4$, $10^5$; every (F) rectangle matched; $11$ pre-fix (F) rectangles
+re-run; $5570$ adversarial Arb points. Findings: float slivers at $|y|=1.1$ and $L=0.1$; the constant $6.3$ used as a float,
+$1.8\cdot10^{-16}$ low. All fixed (\S\ref{sec:offpeak}). Sound.
+\item \emph{Classes $0$--$2$} (\texttt{AUDIT2\_CLASS012.md}): representation re-derived, every term inventoried,
+monotonicity in $X$ tested up to $1000X_{\min}$, $76$ hard points validated by an exact CRT method over $82$ primes: all
+signs correct, true error $15$--$260\times$ below the certified bound. No mathematical error.
+\end{itemize}
+
+\emph{Outside referee} (\texttt{REFEREE\_FULL.md}). The whole proof was read end to end, with the certificates treated as
+black boxes, $13$ logs and two scripts spot-checked. Verdict: correct with gaps to fill. One major point: for Laplace
+classes $0$--$2$ the float-stepped tiling ended at $11.999999999999831$ while the tail cell started at $12$. This is now
+closed twice (last tile snapped to $12$, tail cell run from $11.99$; Lemmas~\ref{lem:lap012-tiles}
+and~\ref{lem:lap012-tail}). Nine minor points were presentational and are addressed.
+
+\subsection{Defects found and fixed in the components used}
+\begin{itemize}
+\item \emph{Expansion.} The Farey order must be $N=K(\nu)$, not $K(\nu)-1$; $\Econ$ is rounded up to $27.4636$ (it had been
+rounded down); $K_5$ is rounded up to $2.8549955$.
+\item \emph{Band.} An earlier majorant used a Bessel envelope in the wrong direction; an earlier extension certificate
+undercounted pairs by $4\times$ and triples by $10\times$; an earlier monotonicity script dropped NaN results silently. All
+are superseded by the exact run to $n=2000$ and by $\Psi$; the threshold for ``$\Psi$ decreasing'' is $N\ge257$.
+\item \emph{Laplace, classes $0$--$2$.} The pass test now rejects NaN (\texttt{not all(x > 0)}); the decay assertion uses
+$\kappa-a_5/4$ (the $k=10$ Rankin term) instead of $\kappa-a_5/5$; the $V=12$ sliver is closed.
+\item \emph{Laplace, classes $3$--$4$.} The $V=12$ sliver is closed in the same way; NaN pass-through in suprema and in the
+pass test is guarded; the log is regenerated with the fixed script.
+\item \emph{Centre.} The scalar comparison $|\mathrm{OFF}|\le0.0187\le$ slack of an earlier version is false
+($0.018791$ against $0.018703$); it is replaced by the per-box comparison, now asserted in Arb.
+\item \emph{Off-peak lemma.} The sliver $(\mathrm{fl}(\pi),\pi]$, the $h$/sign reduction for (N), an inexact key in the
+assembly and the validation of the float checker are fixed or superseded by the Arb run of (F); an early exit in the Arb
+cell test (which could only reject) was removed; float slivers at $|y|=1.1$ and $L=0.1$ are closed; $6.3$ is an exact ball
+everywhere.
+\item \emph{Earlier centre certificate.} The strip next to each peak was bounded by nothing; the tail was normalised with a
+lower curvature, $7.4\times$ too small; the tail lemma was unproved (now Lemma~\ref{lem:offpeak}); an Euler--Maclaurin
+constant was invalid; a Taylor constant was evaluated at the centre instead of over the window; an arctan law was used
+without its error; $L<0.05$ was not covered. All are fixed in the present near-peak analysis.
+\end{itemize}
+
+\subsection{Withdrawn components}\label{app:withdrawn}
+The following earlier components are not used anywhere in this paper.
+\begin{itemize}
+\item \texttt{B\_uniform5.py}, a $983$-tile Laplace certificate for all classes: NaN cells had been replaced by
+$e^{-10^6}$, silently dropping $7168$ cells; with a NaN guard, $63$ of $73$ tiles fail.
+\item The old Laplace certificate for classes $3$--$4$ (\texttt{mono\_cert.py}, \texttt{zone2\_cert.py},
+\texttt{tail3\_cell.py} and related): it was centred on the kernel-only saddle $m=a_5/W^2$ and treated the $O(N)$ thin
+factor $e^{-5nu}$ and the twisted-product factor as amplitudes. Against the exact line integral its main term was off by
+factors down to $e^{-13}$, while it certified $B\le0.06$, so ``$B<1$'' proved nothing. Superseded by the re-centred saddle
+of \S\ref{sec:lap34}.
+\item A folded identity with $D_0=1.12601$: correct, but unnecessary, since \S\ref{sec:t-repr} is exact without folding.
+\item The old centre certificate: it had the holes listed above; class $4$ fails at the handover once the tail normalisation
+is corrected. Superseded by \S\ref{sec:t-centre}.
+\item Earlier band extensions and a $t_{\min}$ table with a wrong normalisation.
+\end{itemize}

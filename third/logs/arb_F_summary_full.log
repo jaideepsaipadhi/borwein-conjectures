@@ -1,0 +1,11 @@
+piece 0 (T=40, [0.049900,0.100000]): 6 rects, all OK
+piece 1 (T=40, [1.156637,1.206737]): 6 rects, all OK
+piece 2 (T=40, [1.306537,1.356637]): 6 rects, all OK
+piece 3 (T=40, [2.413274,2.463374]): 6 rects, all OK
+piece 4 (T=40, [2.563174,2.613274]): 6 rects, all OK
+piece 5 (T=20, [0.100000,1.156637]): 53 rects, all OK
+piece 6 (T=20, [1.356637,2.413274]): 53 rects, all OK
+piece 7 (T=20, [2.613274,3.141593]): 27 rects, all OK
+(F) arb: CERTIFIED for all n >= N0 (all rects OK)
+47.91 piece=7 rect=26 T=20 [3.133274122871835,3.1415926535897936] OK min margin(N0)=47.91 arbcells=32101 arbfa
+51.76 piece=0 rect=0 T=40 [0.0499,0.059900000000000002] OK min margin(N0)=51.76 arbcells=66145 arbfail=1465 (3

@@ -1,0 +1,9 @@
+construction validated against the direct product S_n for n = 1..14
+  n=500 done (7s)
+  n=750 done (20s)
+  n=1000 done (40s)
+  n=1250 done (65s)
+  n=1500 done (92s)
+  n=1750 done (135s)
+  n=2000 done (192s)
+n in [291,2000]: sign failures (any class, m < 4N): 0;  max |b2+b3|/|b1| (classes 3,4, 2N<=m<4N) = 0.0001 at n=291, m=5819 (t=m/N=3.997)

@@ -1,0 +1,99 @@
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.05in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,longtable,array,enumitem}
+\usepackage[hyphens]{url}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage[expansion=false]{microtype}
+
+\setlist{leftmargin=2em}
+\emergencystretch=2em
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem*{theoremA}{Theorem A}
+\newtheorem*{theoremB}{Theorem B}
+\theoremstyle{definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{certificate}[theorem]{Certificate}
+
+% Certificate line attached to a lemma proved by computation
+\newcommand{\cert}[2]{\par\smallskip{\raggedright\noindent\emph{Certificate:} \texttt{#1}; log \texttt{#2}.\par}}
+
+\DeclareMathOperator{\Li}{Li}
+\DeclareMathOperator{\TV}{TV}
+\DeclareMathOperator{\erfc}{erfc}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Amp}{Amp}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\N}{\mathbb N}
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\HH}{\mathbb H}
+\newcommand{\cP}{\mathcal P}
+\newcommand{\cG}{\mathcal G}
+\newcommand{\cL}{\mathcal L}
+\newcommand{\cN}{\mathcal N}
+\newcommand{\cB}{\mathcal B}
+\newcommand{\fa}{\mathfrak a}
+\newcommand{\Rh}{\widehat R}
+\newcommand{\St}{\widetilde S}
+\newcommand{\Qt}{\widetilde Q}
+\newcommand{\Econ}{E_{\mathrm{con}}}
+\newcommand{\e}{\mathrm e}
+\newcommand{\vp}{\varpi}
+
+\begin{document}
+
+\title[A method for Borwein-type sign problems]{Sign patterns of Borwein products by explicit circle-method and saddle-point certificates: the cubic Borwein conjecture and the Third Borwein conjecture}
+\author{Jaideep Sai Padhi}
+\address{Department of Computer Science, Purdue University, West Lafayette, IN 47907, USA}
+\email{jpadhi@purdue.edu}
+\date{\today}
+\subjclass[2020]{Primary 11P82; Secondary 05A17, 30E15, 65G20}
+\keywords{Borwein conjecture, sign patterns, circle method, saddle-point method, ball arithmetic, computer-assisted proof}
+
+\begin{abstract}
+For a prime $p$ put $P_{p,n}(q)=\prod_{k\le pn,\,p\nmid k}(1-q^k)$. We develop a method for proving sign patterns of the
+coefficients of $P_{p,n}(q)^\delta$ modulo $p$, and use it to settle two open cases. First, we prove the remaining residue
+class of the cubic Borwein conjecture: $[q^m]P_{3,n}(q)^3\le0$ for all $n\ge1$ and all $m\equiv2\pmod 3$; together with
+the work of Wang and Krattenthaler this proves the conjecture. Second, we prove the Third Borwein conjecture: the
+coefficients of $P_{5,n}(q)=(q;q)_{5n}/(q^5;q^5)_n$ are $\ge0$ at exponents divisible by $5$ and $\le0$ otherwise.
+
+The method factors $P_{p,n}^\delta=G_p^\delta E_n$ with $G_p=(q;q)_\infty/(q^p;q^p)_\infty$ and a tail $E_n$ with
+non-negative coefficients, uses an explicit circle-method expansion of $G_p^\delta$ with a fully proved error constant, and
+splits the coefficient range into an exact range, a band, a Laplace (saddle-point) region and a centre. Each analytic
+region is reduced to finitely many inequalities in a few real parameters, which are verified in ball arithmetic uniformly
+in $n$. For $p=5$ new difficulties arise: two residue classes in which the main term vanishes, which require re-centring
+the saddle point on the thin factor, and a centre region that requires an off-peak bound for $|P_{5,n}|$ on the whole
+circle.
+
+\emph{Both proofs are computer-assisted.} All programs, their logs, and the lines each log must contain are published
+with the paper and are described in \S\ref{sec:computations}.
+\end{abstract}
+
+\maketitle
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+\input{sections/01_introduction}
+\input{sections/02_framework}
+\input{sections/03_cubic}
+\input{sections/04_third}
+\input{sections/05_computations}
+
+\appendix
+\input{sections/A_verification}
+\input{sections/B_standard_facts}
+
+\bibliographystyle{amsplain}
+\bibliography{refs}
+
+\end{document}

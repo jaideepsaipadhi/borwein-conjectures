@@ -1,0 +1,110 @@
+%=====================================================================
+\section{Introduction}\label{sec:intro}
+%=====================================================================
+
+For a prime $p$ and $n\ge1$ put
+\[
+P_{p,n}(q)=\prod_{\substack{k\le pn\\ p\nmid k}}(1-q^k)=\frac{(q;q)_{pn}}{(q^p;q^p)_n}.
+\]
+P.~Borwein observed, and Andrews \cite{Andrews} made widely known, that the coefficients of such products and of their
+small powers appear to have a sign pattern that depends only on the exponent modulo $p$.
+% Andrews [J. Symbolic Comput. 20 (1995)] discusses several conjectures of P. Borwein for p=3 and p=5; the names
+% First/Second/Third follow Wang--Krattenthaler and Berkovich--Dhar (First: P_{3,n}; Second: P_{3,n}^2; Third: P_{5,n}).
+% TODO: numbering inside Andrews's paper itself not verified (full text not accessible).
+The three conjectures that concern us are the following. Write $c(m)$ for the coefficient of $q^m$ in the polynomial
+under discussion.
+\begin{enumerate}
+\item (\emph{First Borwein conjecture.}) For $P_{3,n}$: $c(m)\ge0$ if $m\equiv0$ and $c(m)\le0$ if $m\equiv1,2\pmod 3$.
+\item (\emph{Cubic Borwein conjecture.}) The same pattern $+\,-\,-$ holds for $P_{3,n}^3$.
+\item (\emph{Third Borwein conjecture.}) For $P_{5,n}$: $c(m)\ge0$ if $5\mid m$ and $c(m)\le0$ otherwise.
+\end{enumerate}
+There is also a second Borwein conjecture, for $P_{3,n}^2$. (The names First, Second and Third follow
+\cite{WK,BerkovichDhar}; Andrews \cite{Andrews} discusses Borwein's conjectures for $p=3$ and $p=5$.) The first conjecture was
+proved by Wang \cite{Wang}, by an analytic (saddle-point) method. Wang and Krattenthaler \cite{WK} gave a new proof of the first
+conjecture and proved the second by an asymptotic approach to Borwein-type sign patterns; they also proved ``two thirds'' of
+the cubic conjecture (see also \cite[\S1]{BerkovichDhar}), namely the class $m\equiv0\pmod3$ and, in the range
+$m\le\frac92n^2$ (equivalently, by the palindromic symmetry of $P_{3,n}^3$, the complementary halves), the class
+$m\equiv1\pmod3$, and explain \cite[\S11]{WK} why the class $m\equiv2$ resists their method.
+% Consistency check (resolves the earlier TODO): P_{3,n}^3 is palindromic of degree 9n^2 = 0 (mod 3), so m -> 9n^2-m
+% swaps the classes 1 and 2. Berkovich--Dhar's 'all of kappa_n, half of delta_n, half of theta_n' therefore describes
+% class 0 plus one pair of mirror-image halves (class 1 for m <= 9n^2/2 <-> class 2 for m >= 9n^2/2). The half that is
+% open must be the 'thin' one: by Jacobi's identity every coefficient of P_infty^3 in class 2 vanishes, so class 2 with
+% m <= 9n^2/2 is exactly where the main term cancels -- which is what WK Sect. 11 says resists their method. This is the
+% class treated in Theorem A. Theorem number in WK Sect. 10 not checked verbatim (arXiv full text not reachable here).
+The Third Borwein conjecture is listed as open in the recent literature \cite[Conj.~1.3]{BerkovichDhar}, where it is noted
+that \cite{WK} provides ideas for ``three fifths'' of a proof; we are not aware of a proof in the literature.
+
+\subsection{Main results}
+
+\begin{conjecture}[cubic Borwein conjecture]\label{conj:cubic}
+Let $c_n(m)=[q^m]P_{3,n}(q)^3$. For all $n\ge1$ and $0\le m\le\frac92n^2$: $c_n(m)\ge0$ if $m\equiv0$, and $c_n(m)\le0$ if
+$m\equiv1,2\pmod 3$.
+\end{conjecture}
+
+\begin{theoremA}[the remaining class of the cubic conjecture]
+For all $n\ge1$ and all $m\equiv2\pmod3$ with $m\le\frac92n^2$ we have $c_n(m)=0$ if $m<3n$ and $c_n(m)<0$ if $m\ge3n$.
+Together with \cite{WK} this proves Conjecture~\ref{conj:cubic}.
+\end{theoremA}
+
+\begin{conjecture}[Third Borwein conjecture]\label{conj:third}
+Let $c_n(m)=[q^m]P_{5,n}(q)$. For every $n\ge1$ and every $m$, $c_n(m)\ge0$ if $m\equiv0\pmod5$ and $c_n(m)\le0$ if
+$m\not\equiv0\pmod 5$.
+\end{conjecture}
+
+\begin{theoremB}
+Conjecture~\ref{conj:third} holds.
+\end{theoremB}
+
+Theorem~A is Theorem~\ref{thm:cubic-main} and Theorem~B is Theorem~\ref{thm:third-main}. Both are computer-assisted.
+Theorem~A needs only the one residue class $m\equiv2\pmod3$; Theorem~B is proved for all five classes modulo $5$.
+
+\subsection{Why the remaining cases are hard}
+Both polynomials factor as $P_{p,n}^\delta=G_p^\delta E_n$ (\S\ref{sec:framework}), where $G_p=(q;q)_\infty/(q^p;q^p)_\infty$
+and $E_n$ is a tail product with non-negative coefficients. The circle method gives the coefficients of $G_p^\delta$ with a
+main term from the cusps of denominator $p$, and the tail $E_n$ is a small perturbation of $1$ for exponents $m$ below
+$N=pn+1$. The difficulty is that in the classes we must treat, the main term of $G_p^\delta$ vanishes:
+\begin{itemize}
+\item for $p=3$, $\delta=3$, all coefficients of $G_3^3$ in the class $m\equiv2$ vanish (Lemma~\ref{lem:vanish});
+\item for $p=5$, $\delta=1$, all coefficients of $G_5$ in the classes $m\equiv3,4$ vanish (Lemma~\ref{lem:vanish}).
+\end{itemize}
+In these ``thin'' classes $c_n(m)$ is produced entirely by the tail $E_n$, and the leading saddle-point contribution
+cancels. The sign then comes from a secondary term that is exponentially smaller than the naive main term.
+
+\subsection{Overview of the method}
+The coefficient range is split into four regions (\S\ref{sec:regions}).
+\begin{enumerate}
+\item \emph{Exact range.} Small $n$ are handled by exact integer computation.
+\item \emph{Band.} For $m$ below a small multiple of $N$ only a few parts of $E_n$ contribute, and $c_n(m)$ is a short,
+explicit combination of coefficients of $G_p^\delta$, controlled by exact values and by the circle-method expansion.
+\item \emph{Laplace region.} Here an exact Bessel--Laplace (or Poisson) representation of the main term is combined with
+the closed form of $\log E_n$ at a twisted point, and a saddle-point analysis is carried out in scaled variables.
+\item \emph{Centre.} Near the middle of the coefficient range, Cauchy's formula for the polynomial is evaluated directly
+by steepest descent through the saddles near the primitive $p$-th roots of unity.
+\end{enumerate}
+The method was developed on the cubic case. For $p=5$ three new difficulties arise:
+\begin{itemize}
+\item \emph{two} vanishing classes instead of one;
+\item in the Laplace region for the classes $3,4$ the surviving term carries a factor $e^{-5nu}$ which is of size
+$e^{O(N)}$ \emph{in the exponent}; the saddle must be re-centred on this ``thin factor'' (\S\ref{sec:lap34});
+\item in the centre, the contribution of the circle away from the four peaks must be bounded by an explicit
+\emph{off-peak lemma} for $|P_{5,n}|$ (\S\ref{sec:offpeak}), which is then combined with the near-peak analysis box by box.
+\end{itemize}
+The two proofs share the method, not their results: the cubic theorem is not an ingredient of the proof for $p=5$, and
+conversely.
+
+\subsection{What is computer-assisted, and how it is verified}
+Each analytic region is reduced to finitely many inequalities between explicit functions of one to three real parameters
+(a scaled saddle point, the reciprocal $1/N$, an angle), and these are verified on coverings of the parameter domains by
+balls in Arb ball arithmetic \cite{Arb}. Uniformity in $n$ is obtained in two ways: the scaled integrands are analytic in
+$1/N$ at $0$, so one ball covers all large $N$; and every term that depends on $n$ is shown, by an asserted inequality, to
+be non-increasing in $n$. Exact ranges are computed with FLINT \cite{FLINT} in $\Z[q]$.
+
+Throughout, a statement proved by a computation is stated as a lemma or a certificate, followed by a line
+\emph{Certificate:} naming the program and its log. Section~\ref{sec:computations} lists, for every certificate, the
+command, the log and the line the log must contain; Appendix~\ref{app:verification} summarises the independent audits of the
+proof of Theorem~B. The trust base consists of the written arguments of this paper, the standard facts of
+Appendix~\ref{app:facts}, and the correctness of Arb and FLINT.
+
+\subsection{Organisation}
+Section~\ref{sec:framework} sets up the common framework and notation. Section~\ref{sec:cubic} proves Theorem~A and
+Section~\ref{sec:third} proves Theorem~B. Section~\ref{sec:computations} describes the certificates.

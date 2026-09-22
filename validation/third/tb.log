@@ -1,0 +1,5 @@
+h=1 (N-a) y in [6,200]: CERTIFIED boxes=640 worst V(N0)=-147.9 (1s)
+h=1 (N-b) y in [200, 0.25 n]: CERTIFIED boxes=500 worst V(N0)=-23.3 (1s)
+h=0 (N-a) y in [20,200]: CERTIFIED boxes=360 worst V(N0)=-71.3 (2s)
+h=0 (N-b) y in [200, 0.25 n]: CERTIFIED boxes=500 worst V(N0)=-1.8 (2s)
+N0=821: piece (N) CERTIFIED for all n >= N0

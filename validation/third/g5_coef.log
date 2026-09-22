@@ -1,0 +1,7 @@
+p(n) to 40000 in 2s
+G_5 coeffs in 4s; s(0..8)=[1, -1, -1, 0, 0, 2, -1, 0, 0]
+saved
+
+real	0m3.761s
+user	0m3.591s
+sys	0m0.168s

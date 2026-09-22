@@ -1,0 +1,385 @@
+%=====================================================================
+\section{The cubic case: the class \texorpdfstring{$m\equiv2\pmod 3$}{m = 2 mod 3}}\label{sec:cubic}
+%=====================================================================
+
+In this section $p=\delta=3$, $P_n=P_{3,n}$, $c_n(m)=[q^m]P_n^3$, $N=3n+1$, $a_3=\pi^2/9$, $\omega=\omega_3=e^{2\pi i/3}$,
+$s(i)=[q^i]G_3^3$ and $P_\infty=G_3$, so that $E_n=P_\infty^3/P_n^3=\prod_{k>3n,\,3\nmid k}(1-q^k)^{-3}$. By
+Lemma~\ref{lem:vanish}(a), $c_n(m)$ for $m\equiv2$ is produced entirely by the tail $E_n$.
+
+\begin{theorem}\label{thm:cubic-main}
+For all $n\ge1$ and all $m\equiv2\pmod3$ with $m\le\frac92n^2$ we have $c_n(m)=0$ if $m<3n$ and $c_n(m)<0$ if $m\ge3n$.
+Together with \cite{WK} this proves Conjecture~\ref{conj:cubic}.
+\end{theorem}
+
+Put $\bar\mu=m/N^2$ and $\tilde\mu=(m-N-\frac14)/N^2$. The admissible pairs $(n,m)$ are covered by five regions
+(Table~\ref{tab:regions3}).
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+region & method & where\\
+\midrule
+$n\le243$ & exact integer computation & \S\ref{sec:c-finite}\\
+$n\ge244$, $m<6n+2$ & band lemma & Prop.~\ref{prop:c-band}\\
+$n\ge244$, $m\ge 6n+2$, $\tilde\mu<0.0985$, saddle $v\le3000$ & Laplace certificate, uniform in $n$ & \S\ref{sec:c-laplace}\\
+$n\ge244$, saddle $v\ge3000$ & closing lemma & \S\ref{sec:c-closing}\\
+$n\ge244$, $\bar\mu\ge0.098$ & centre certificate, uniform in $n$ & \S\ref{sec:c-centre}\\
+\bottomrule
+\end{tabular}
+\caption{The covering of the admissible $(n,m)$ for $p=3$. That these regions exhaust all cases is
+Proposition~\ref{prop:c-coverage}.}
+\label{tab:regions3}
+\end{table}
+
+\subsection{Structural lemmas}\label{sec:c-structural}
+
+\begin{lemma}[tail phase]\label{lem:c-tailphase}
+For $0<q<1$, $\Delta(q):=\Im\log E_n(\omega q)\in(0,\pi/2)$.
+\end{lemma}
+\begin{proof}
+$\Im\log E_n(\omega q)=3\sum_{A\ge n}\big[f(q^{3A+1})-f(q^{3A+2})\big]$ with $f(x)=\arctan(\sqrt3x/(2+x))$, increasing on
+$[0,1]$ with $f(1)=\pi/6$. Each bracket is positive, and $f(q^{3A+1})-f(q^{3A+2})\le f(q^{3A+1})-f(q^{3A+4})$ telescopes
+to at most $f(q^{3n+1})<\pi/6$.
+\end{proof}
+
+\begin{lemma}[closed forms]\label{lem:c-closed}
+Let $\chi'(r)=1$ for $r\equiv1$, $-1$ for $r\equiv2$, and $h_r(q)=(q^{Nr}+q^{(N+1)r})/(1-q^{3r})$. For $|q|<1$,
+\[
+\log E_n(\omega q)=S(q)+i\Delta(q),\qquad
+S=-\sum_{3\nmid r}\frac{3}{2r}h_r+\sum_{3\mid r}\frac3r h_r,\qquad
+\Delta=\sum_{3\nmid r}\frac{3\sqrt3}{2r}\chi'(r)\frac{q^{Nr}(1-q^r)}{1-q^{3r}},
+\]
+as an identity of analytic functions. Consequently $F(q):=\frac1{2i}\big(E_n(\omega q)-E_n(\bar\omega q)\big)=e^{S}\sin\Delta$
+on $0<q<1$, and $F$ is the analytic continuation of this expression.
+\end{lemma}
+\begin{proof}
+Expand $-3\log(1-\omega^kq^k)=3\sum_r\omega^{kr}q^{kr}/r$ and sum the geometric series over $k\equiv1,2\pmod3$, $k>3n$;
+this gives $\sum_r\frac3r(\omega^rq^{Nr}+\omega^{2r}q^{(N+1)r})/(1-q^{3r})$, whose real and imaginary parts for real $q$
+are the displayed expressions, and the displayed combination equals the series identically in $q$.
+\end{proof}
+
+Let $\chi(i)=1,-1,0$ for $i\equiv0,1,2\pmod 3$. With $B=\frac12$ and $C=2i-\frac12$ we have
+$\cP_3(i)=\sqrt{a_3/(i-\frac14)}\,I_1\big(2\sqrt{a_3(i-\frac14)}\big)$.
+
+\begin{theorem}[explicit expansion of $G_3^3$]\label{thm:expansion3}
+For all $i\ge1$,
+\[
+s(i)=\sqrt3\,\chi(i)\,\cP_3(i)+\rho(i),\qquad |\rho(i)|\le\sum_{\substack{6\le k\le K(i)\\3\mid k}}\varphi(k)\cP_k(i)+\Econ,
+\]
+with $K(i)=\lfloor\sqrt{4\pi i}\rfloor+2$ and $\Econ=50.1501$.
+\end{theorem}
+The proof is in \S\ref{sec:expansion3}. Thus $\fa(i)=\sqrt3\chi(i)$ in the notation of~\eqref{eq:expansion-shape}.
+
+\begin{lemma}[Poisson form]\label{lem:c-poisson}
+Let $\cP^\sharp(q)=\sum_{i\ge1}\cP_3(i)q^i$. For $\Re w>0$, $|\Im w|\le\pi$,
+\[
+\cP^\sharp(e^{-w})=e^{-w/4}\big(e^{a_3/w}-1+\varepsilon(w)\big),\qquad
+\varepsilon(w)=\sum_{k\ne0}(-i)^k\big(e^{a_3/(w+2\pi ik)}-1\big),
+\]
+and $|{-1}+\varepsilon(w)|\le 1.42$.
+\end{lemma}
+\begin{proof}
+$x\mapsto\sqrt{a_3/x}\,I_1(2\sqrt{a_3x})$ has Laplace transform $e^{a_3/w}-1$; Poisson summation over the shifted lattice
+$i-\frac14$ gives the identity. The bound is Certificate~\ref{cert:c-poisson}.
+\end{proof}
+
+\begin{certificate}\label{cert:c-poisson}
+Ball-arithmetic enclosure of $|{-1}+\varepsilon(w)|$ on $1600$ boxes covering $0<\Re w\le10$, $|\Im w|\le\pi$, with the
+terms $|k|>400$ bounded by $8a_3/(\pi\cdot400)+a_3^2e^{a_3/\pi}/(400\pi^2)$. Output: $|{-1}+\varepsilon|\le1.420$.
+\cert{poisson\_check.py}{cubic/logs/04a\_poisson.log}
+\end{certificate}
+
+\begin{proposition}[reduction]\label{prop:c-reduce}
+Let $m\equiv2\pmod3$, $W>0$ and $w=W+iy$. Then $c_n(m)=-2\Im J+R(m)$, where
+\[
+\Im J=\frac1{2\pi}\int_{-\pi}^{\pi}\Re\, e^{\Rh(w)}\,dy+\Im J_\varepsilon,\qquad
+\Rh(w)=\frac{a_3}w+\Big(m-\frac14\Big)w+S(e^{-w})+\log\sin\Delta(e^{-w}),
+\]
+$|\Im J_\varepsilon|\le\frac1{2\pi}\int_{-\pi}^{\pi}1.42\,e^{(m-\frac14)W}|F(e^{-w})|\,dy$, and, for every $w_1>0$,
+\[
+|R(m)|\le\sum_{\substack{6\le k\le K(m)\\3\mid k}}3\varphi(k)\,e^{mw_1+a_k/w_1}E_n(e^{-w_1})+\Econ\,e^{mw_1}E_n(e^{-w_1}),
+\qquad a_k=\pi^2/k^2 .
+\]
+\end{proposition}
+\begin{proof}
+$c_n(m)=\sum_je(j)s(m-j)$ with $e(j)=[q^j]E_n\ge0$. Inserting Theorem~\ref{thm:expansion3}, the $\chi$-part equals
+$\sum_je(j)\sqrt3\chi(m-j)\cP_3(m-j)=-2\Im[q^m]\cP^\sharp(q)E_n(\omega q)$ for $m\equiv2$ (compare coefficients: $e(j)$ is
+real and $\sqrt3\chi(m-j)=-2\Im\omega^{j}$ for $m\equiv2$). The coefficient is
+$\frac1{2\pi}\int\cP^\sharp(e^{-w})E_n(\omega e^{-w})e^{mw}dy$; by Lemma~\ref{lem:c-poisson}, reality of
+$[q^m]\cP^\sharp F$ and Lemma~\ref{lem:c-closed} this gives the displayed $\Im J$. For $R$, the remainder terms are bounded
+termwise using $e(j)\ge0$, $\cP_k\ge0$ and $\sum_i\cP_k(i)e^{-w_1i}\le(1+2a_k)e^{a_k/w_1}\le3e^{a_k/w_1}$ (from
+$I_1(y)\le\frac y2e^y$ and the Laplace transform).
+\end{proof}
+
+\begin{remark}\label{rem:c-identity}
+Proposition~\ref{prop:c-reduce} is checked end to end by \texttt{identity\_check.py}: for $n=12$ ($m=200,302,404$) and
+$n=20$ ($m=500,800,1100$) the exact $c_n(m)$ agrees with $-2(\Im J_0+\Im J_\varepsilon)+R(m)$, each piece computed
+independently, to relative error $<10^{-8}$. The bound of Theorem~\ref{thm:expansion3} is checked exactly for all
+$i\le3000$ and for $3388$ values $i\le108000$ (\texttt{expansion\_check.py}); the maximal ratio is $\sqrt3/2$. Neither
+check is part of the proof.
+\end{remark}
+
+In particular, $c_n(m)<0$ follows from
+\begin{equation}\label{eq:c-target}
+\frac1{2\pi}\int_{-\pi}^{\pi}\Re\,e^{\Rh(W+iy)}\,dy\ >\ |\Im J_\varepsilon|+\tfrac12|R(m)| .
+\end{equation}
+
+\subsection{The finite range and the band}\label{sec:c-finite}
+
+\begin{certificate}[finite range]\label{cert:c-finite}
+$P_n^3$ is computed exactly in $\Z[q]$ (FLINT) for $n\le243$, and it is checked that $c_n(m)=0$ for $m<3n$ and $c_n(m)<0$
+for $3n\le m\le\frac92n^2$, $m\equiv2$. Output: no violations.
+\cert{exact\_small\_n.py}{cubic/logs/01\_exact\_small\_n\_\{a,b,c\}.log}
+\end{certificate}
+
+\begin{proposition}[band]\label{prop:c-band}
+For $3n+2\le m<6n+2$ with $m=3M+2$, $c_n(m)=3\sum_{i=0}^{M-n}g(i)$ with $g(i)=s(3i)+s(3i+1)$, and $g(i)<0$ for all
+$i\ge0$. Hence $c_n(m)<0$ in the band.
+\end{proposition}
+\begin{proof}
+Since $6n+2=2N$, $E_n\equiv1+3\sum_{N\le j<2N,\,3\nmid j}q^j\pmod{q^{2N}}$, and $s(m)=0$. Grouping $j=3A+1$ and $j=3A+2$
+gives the identity (checked exactly for $n\le60$ by \texttt{band\_lemma.py}). Negativity of $g$ is exact for $i\le36000$
+(Certificate~\ref{cert:c-band}). For $i\ge36000$, Theorem~\ref{thm:expansion3} gives
+$g(i)\le-\sqrt3\big(\cP_3(3i+1)-\cP_3(3i)\big)+\rho_{\max}(3i)+\rho_{\max}(3i+1)$. Since $\cP_3(x)=2a_3I_1(y)/y$ with
+$y=2\sqrt{a_3(x-\frac14)}$, we have $\cP_3'(x)=4a_3^2I_2(y)/y^2$, and $\cP_3$ is increasing and convex, so the difference
+is at least $\cP_3'(3i)$. Using $I_2(y)\ge\kappa_2e^y/\sqrt{2\pi y}$ for $y\ge y_0$, $I_1(y)\le e^y/\sqrt{2\pi y}$,
+$\cP_k\le\cP_6$ for $k\ge6$ and $\sum\varphi(k)\le K^2/2$, the ratio of the $\rho$-bound to the main difference is of the
+form ${\rm poly}(y)e^{-y/2}$, decreasing for $y\ge9$, and at $i=36000$ ($y_0=688.3$) it is at most $5\cdot10^{-139}$ in
+ball arithmetic.
+\cert{band\_tail\_rigorous.py}{cubic/logs/02b\_band\_tail.log}
+\end{proof}
+
+\begin{certificate}\label{cert:c-band}
+Exact $s(i)$ from Jacobi's identity and the recurrence $jb(j)=3\sum_t\sigma(t)b(j-t)$ for $b=[q^j](q;q)^{-3}_\infty$.
+Output: the identity of Proposition~\ref{prop:c-band} holds for $n\le60$; $g(i)<0$ for all $i\le36000$.
+\cert{band\_lemma.py 36000}{cubic/logs/02\_band\_lemma.log}
+\end{certificate}
+
+\subsection{The Laplace regime}\label{sec:c-laplace}
+
+\subsubsection{Scaled form}
+Let $\zeta=Nw$, $\epsilon=1/N$, $g(x)=x/(1-e^{-x})$ and $h(x)=(1-e^{-x})/(1-e^{-3x})=g(3x)/(3g(x))$. Both $g$ and $h$ are
+analytic for $|x|<2\pi/3$.
+
+\begin{lemma}\label{lem:c-scaled}
+$S(e^{-w})=N\St(\zeta,\epsilon)$ and $\Rh(w)=N\,\cG(\zeta)+(m-N-\frac14)\zeta/N$, where
+\[
+\St=\sum_r s_r\,e^{-r\zeta}\big(1+e^{-r\zeta\epsilon}\big)\frac{g(3r\zeta\epsilon)}{3r\zeta},\qquad
+\Qt=\sum_{3\nmid r}\frac{3\sqrt3}{2r}\chi'(r)e^{-(r-1)\zeta}h(r\zeta\epsilon),
+\]
+$s_r=-\frac3{2r}$ ($3\nmid r$), $\frac3r$ ($3\mid r$), and
+$\cG=\frac{a_3}\zeta+\St+\epsilon\big(\log\Qt+\log\tfrac{\sin\Delta}\Delta\big)$ with $\Delta=\Qt e^{-\zeta}$. The saddle
+condition $\Rh'(W)=0$ reads $-\cG'(v)=\tilde\mu$ with $v=NW$.
+\end{lemma}
+\begin{proof}
+Substitute $q=e^{-\zeta\epsilon}$ in Lemma~\ref{lem:c-closed}; $\log\sin\Delta=\log\Qt-\zeta+\log\frac{\sin\Delta}{\Delta}$,
+and the $-\zeta$ combines with $(m-\frac14)w$ to $(m-N-\frac14)\zeta/N$.
+\end{proof}
+
+Thus a pair $(N,m)$ in this regime is represented by its real saddle $v$ and $\epsilon=1/N$. Since $m\ge2N$,
+$\tilde\mu\ge\epsilon(1-\frac1{4N})\ge0.999\epsilon$; balls with $-\cG'(v)<0.999\epsilon$ on the whole ball contain no pairs.
+
+\subsubsection{The error budget on a ball}
+Fix a ball $V_b\ni v$ and a ball $E\ni\epsilon$ with $E\subset[0,1/733]$, and let $N_b=\max(733,1/\sup E)$. Write
+$\cG_j=\cG^{(j)}(v)$, $\sigma_y=N^{-3/2}\cG_2^{-1/2}$ and $\tau=y/\sigma_y$. Dividing~\eqref{eq:c-target} by
+$e^{\Rh(W)}\sigma_y/(2\pi)$, it suffices to show
+\begin{equation}\label{eq:c-B}
+B_{\rm tot}:=\frac{Z_1+Z_2+Z_3+Z_\varepsilon+Z_R}{L_{\rm w}}<1,
+\end{equation}
+where $L_{\rm w}$ bounds the window integral from below and the $Z$'s bound the remaining contributions from above.
+
+\smallskip\noindent\emph{Window $|\tau|\le c$.}
+$\Rh(W+i\sigma_y\tau)-\Rh(W)=-\frac{\tau^2}2-i\cG_{3,n}\frac{\tau^3}6+\phi_4\frac{\tau^4}{24}+E_5$ with
+$\cG_{3,n}=\sqrt\epsilon\,|\cG_3|\cG_2^{-3/2}$, $\phi_4=\epsilon \cG_4\cG_2^{-2}$, $|E_5|\le \cG_{5,n}|\tau|^5/120$,
+$\cG_{5,n}=\epsilon^{3/2}M_5\cG_2^{-5/2}$, where $M_5$ bounds $|\cG^{(5)}|$ on the window: $120a_3/v^6$ for the $a_3/\zeta$
+part plus a Cauchy estimate (Lemma~\ref{lem:cauchy}) for the rest on the circle $|\zeta-v|=0.6v$.
+$L_{\rm w}=\int_{-c}^{c}\ell(\tau)d\tau$ with $\ell$ the resulting pointwise lower bound of the real part
+($\cos\theta\ge1-\theta^2/2$).
+
+\smallskip\noindent\emph{Zone 1, $c\le|\tau|$, $|t|\le t_s$} ($t=Ny$). $\Re[\cG(v+it)-\cG(v)]\le-\frac{t^2}2(\kappa_0-\epsilon\kappa_b)$
+from the even Taylor terms of $\cG_0=a_3/\zeta+\St$ and of $b=\log\Qt+\log\frac{\sin\Delta}\Delta$ with Cauchy remainders at
+order $6$; thus $Z_1=2\int_c^\infty e^{-\kappa\tau^2/2}d\tau$, $\kappa=(\kappa_0-\epsilon\kappa_b)/\cG_2$, independent of $N$.
+
+\smallskip\noindent\emph{Zone 2, $t_s\le t\le t_C$.} On cells, $\Re\Rh-\Rh(W)=NA(t)+B(t)$ with
+$A=\Re[\cG_0(v+it)-\cG_0(v)]$ and $B=\Re[b(v+it)-b(v)]$, enclosed in ball arithmetic (the $a_3/\zeta$ part in closed form,
+the factor $e^{-rv}$ separated to control dependency). The certificate asserts $A<-1/(2N_b)$ on every cell, so
+$N^{1/2}e^{NA}\le N_b^{1/2}e^{N_bA}$ for $N\ge N_b$, and
+$Z_2=(N_b\cG_2)^{1/2}\sum_{\rm cells}2(e^{N_bA+B}+3e^{N_b(A-\Re(a_3/\zeta))+B})\,|{\rm cell}|$ (the second term is the
+$\varepsilon$-part).
+
+\smallskip\noindent\emph{Zone 3, $t\ge t_C$.} Either (crude) $|F|\le E_n(e^{-W})$ and
+$|e^{a_3/w}-1+\varepsilon|\le e^{a_3W/(W^2+y^2)}+3$, giving an exponent $N\beta+O(1)$ with
+$\beta=\Psi(v)/v+a_3v/(v^2+t_C^2)-a_3/v-\St(v)$, $\Psi(v)=2e^{-v}/(1-e^{-v})$, asserted $\beta<-3/(2N_b)$; or (split,
+when $\inf E>0$) $|\Qt|\le\sum_{3\nmid r}\frac{3\sqrt3}{2r}e^{-(r-1)v}2(1/(3rv\inf E)+1)$ and $|\St|$ bounded termwise,
+with slope $<-5/(2N_b)$.
+
+\smallskip\noindent\emph{$R(m)$.} Proposition~\ref{prop:c-reduce} with $w_1=t'W$, $t'$ from a fixed list,
+$\log E_n(e^{-w_1})\le N\Psi(Nw_1)/(Nw_1)+6|\log(1-e^{-Nw_1})|$, $\tilde\mu=-\cG'(v)$ and $\varphi$-sum $\le3(K^2/6+K)$;
+each exponent is asserted to have slope $<-7/(2N_b)$.
+
+\begin{lemma}\label{lem:c-monotone}
+If all assertions above hold on $(V_b,E)$, then $B_{\rm tot}$ computed with $N=N_b$ bounds~\eqref{eq:c-B} for every $N$
+with $1/N\in E$ and every $m$ whose saddle lies in $V_b$.
+\end{lemma}
+\begin{proof}
+$L_{\rm w}$ and $Z_1$ do not depend on $N$ (their $N$-dependence enters only through $\epsilon\in E$). Every other term is
+of the form $N^pe^{N\lambda}$ with $\lambda$ bounded by the asserted slope $<-p/N_b$, hence non-increasing in $N\ge N_b$.
+\end{proof}
+
+\begin{certificate}[uniform Laplace grid]\label{cert:c-laplace}
+$v\in[2.95,3000]$ is covered by $36$ chunks of balls and, for each $v$-ball, $\epsilon\in[0,1/733]$ by $\epsilon$-balls;
+balls whose pairs are vacuous are discarded only after the rigorous bound
+$\tilde\mu\le a_3/v^2+\max_{|\zeta-v|=v/2}|h(\zeta)-h(v)|/(v/2)$ (with $h=\St+\epsilon b$) proves
+$\tilde\mu<0.999\epsilon$, or when $\tilde\mu>0.0985$ (centre regime). Failing balls are bisected. Output: every chunk
+certified, $0$ unresolved balls, $\max B_{\rm tot}=0.117$.
+\cert{run\_uniform.py}{cubic/logs/uni\_*.log (36 logs)}
+\end{certificate}
+
+\subsubsection{The closing lemma}\label{sec:c-closing}
+
+\begin{proposition}\label{prop:c-closing}
+For every pair with saddle $v\ge3000$, \eqref{eq:c-B} holds with $B_{\rm tot}\le0.0082$.
+\end{proposition}
+\begin{proof}[Proof and certificate]
+Put $s=\epsilon v^2/a_3$; the constraint $\tilde\mu\ge0.999\epsilon$ and $\tilde\mu=(a_3/v^2)(1+O(e^{-v}))$ give
+$s\le1.0011$. On $|\zeta-v|\le v/2$: $|\St|\le\sum_r\frac3re^{-rv/2}2(\frac2{3rv}+\epsilon)\le5\cdot10^{-655}$; $|h(x)|\le4$
+for every $r$ (by the Bernoulli enclosure if $|x|<0.9$, and $|h(x)|\le2(|x|/(3\Re x)+1)$ with
+$|x|/\Re x=|\zeta|/\Re\zeta\le3$ otherwise), so the $r\ge2$ part of $\Qt$ and $\Delta$ are $\le4\cdot10^{-651}$; and
+$\log h$ on the disc $|x|\le\frac32a_3s/v$ is enclosed, giving $|b(\zeta)-b(v)|\le4.4\cdot10^{-3}$. By
+Lemma~\ref{lem:cauchy}, the relative perturbations of $\cG_2,\dots,\cG_5$ from their pure $a_3/\zeta$ values are
+$\le4.7\cdot10^{-5}$, so $\cG_{3,n}\le0.0388$, $\phi_4\le2.0\cdot10^{-3}$, $\cG_{5,n}\le1.03\cdot10^{-3}$,
+$\kappa\ge0.8(1-10^{-5})$ on $|t|\le v/2$, and $L_{\rm w}\ge2.494$, $Z_1\le0.0205$. For $|t|\ge v/2$ the exponent is at most
+$-\frac{v}{5s}(1-10^{-5})+\log(\frac{4v}{3a_3s}+6)+20ve^{-v}/(a_3s)$ with prefactor $\sqrt2v^{3/2}/(a_3s^{3/2})$; its
+$s$-derivative is positive for $s\le1.0011$ because $v/5>2.5\cdot1.0011+20ve^{-v}/a_3$, and it decreases in $v$, so the
+worst case is $v=3000$, $s=1.0011$, where $Z_2\le5\cdot10^{-251}$. The $R$-term is $\le10^{-1278}$. All numbers are ball
+enclosures.
+\cert{ray\_asymptotic2.py}{cubic/logs/07\_closing\_lemma.log}
+\end{proof}
+
+\subsection{The centre regime}\label{sec:c-centre}
+
+Here $c_n(m)=\frac1{2\pi}\int_{-\pi}^{\pi}P_n(re^{i\theta})^3r^{-m}e^{-im\theta}d\theta$ is treated directly, without
+Proposition~\ref{prop:c-reduce}. Put $\cL(u)=3\sum_{k\le3n,3\nmid k}\log(1-e^{ku})$, $u_0=2\pi i/3$, and let $u^*=u_0+x^*$
+be the saddle $\cL'(u^*)=m$ near $u_0$; write $\xi=-N\Re x^*$ and $\eta=N\Im x^*$. The conjugate saddle near $-u_0$
+contributes the complex conjugate.
+
+\begin{lemma}[sign margin]\label{lem:c-phase}
+The phase of the main term is $\alpha(r)-\frac{2\pi}3+b+E_1\pmod{2\pi}$, where
+$\alpha(r)=-\frac\pi6+\arctan\big(\sqrt3r^{3n}/(2+r^{3n})\big)$, $b=-\frac12\arg \cL''(u^*)$, and
+$|E_1|\le\sup|\cL''|\,\delta^2/2$ with $\delta=\Im x^*$; moreover
+$|\delta|\le3N\TV_s/(N^3\rho_{\rm lo}-3N^2V_{\rm K})$ by the saddle equation and Abel summation.
+\end{lemma}
+\begin{proof}
+The main term is $M=e^{\cL(u^*)-mu^*}\,\omega\,e^{ib}\sqrt{2\pi/|\cL''(u^*)|}/(2\pi)$ (steepest descent through $u^*$ in the
+direction $ie^{ib}$). Write $u_0'=\log r+2\pi i/3$, so $u^*=u_0'+i\delta$. Then
+$\Im[\cL(u^*)-mu^*]=\Im \cL(u_0')+\int_0^\delta(\Re \cL'(u_0'+is)-m)\,ds-m\cdot\frac{2\pi}3$, and $\Re \cL'(u^*)=m$ gives
+$|\Re \cL'(u_0'+is)-m|\le\sup|\cL''|\,|\delta-s|$, whence the bound on $E_1$. Next $\Im \cL(u_0')=\arg P_n(r\omega)^3=\alpha(r)$
+by the pairing $(1-r^{3j+1}\omega)(1-r^{3j+2}\omega^2)$ of Lemma~\ref{lem:c-tailphase} type; $m\equiv2$ gives
+$m\cdot\frac{2\pi}3\equiv\frac{4\pi}3$, and $\arg\omega=\frac{2\pi}3$. For $\delta$:
+$\Im \cL'(u_0')=3\sum_i[(3i+2)s_\omega(x_{3i+2})-(3i+1)s_\omega(x_{3i+1})]$ with $s_\omega(x)=\Im(\omega x/(1-\omega x))$ and
+$x_k=r^k$, which is at most $3N\,\TV_\tau(\tau s_\omega(e^{-\xi\tau}))$ in modulus; and $\Im \cL'(u_0'+i\delta)=0$ with
+$\Re \cL''\ge N^3\rho_{\rm lo}-3N^2V_{\rm K}$ on the segment.
+\end{proof}
+(Here $\rho_{\rm lo}$ is a lower bound for the scaled continuum curvature and $V_{\rm K}$ a Koksma total-variation constant,
+Lemma~\ref{lem:koksma}.)
+
+The certificate splits the circle into a window $|\theta-\theta^*|\le c\sigma$, a middle stretch up to
+$|\theta-2\pi/3|\le0.05$, and the far region. Each contribution is bounded uniformly in $N\ge733$ as a function of $\xi$:
+\begin{itemize}
+\item \emph{Window}: the cubic Taylor constant $G_3=H_3\sigma^3$ with
+$H_3(\text{window})\le N^4[h_3+3(\TV+S)/N]$ and $\sigma^3\le(N^3a_2-3N^2V_{\rm K})^{-3/2}$ (continuum integrals plus Koksma
+remainders, Lemma~\ref{lem:koksma}); the window shrinks with $N$.
+\item \emph{Middle}: three zones in $t=N(\theta-2\pi/3)$: Taylor with $\Re \cL''\ge N^3\rho_{\rm lo}(t)-3N^2V_{\rm K}$
+($|t|\le0.8$); the linearised continuum profile $-N\int_0^1 g(e^{-\xi\tau})(1-\cos\tau t)d\tau$ plus a Koksma constant
+($0.8\le t\le10$, slope asserted); a Dirichlet-kernel bound ($t\ge10$, slope asserted).
+\item \emph{Far}: for $\theta\ge0.05$ a Dirichlet-kernel bound; near $\theta=0$ a continuum profile
+$-N\int g(1+2\cos\tau t)$ with positivity asserted on $t\in[0,40]$ and a kernel bound beyond; slopes asserted.
+\item \emph{Sign margin}: Lemma~\ref{lem:c-phase} with $r^{3n}=e^{-\xi(1-1/N)}$ enclosed over all $N\ge733$.
+\end{itemize}
+
+\begin{certificate}[centre tables]\label{cert:c-centre}
+On $74$ $\xi$-balls (with finer sub-tables of $115$ balls for the middle and window constants) covering $[-0.3,3.4]$, the
+programs produce uniform bounds for the middle stretch, the window constant, the sign margin (with $\cos<0$ asserted) and
+the far region. \texttt{coverage.py} (check E) combines them into
+${\rm err}=(2(\text{inner}+\text{middle})+\text{far})/(2\,|\cos|)$ on every ball. Output: $\max{\rm err}=0.49<1$. The
+saddle offset satisfies $|\eta|\le0.0155$, within the shift margins of the tables (check G).
+\cert{centre\_mid\_uniform\{,2,3\}.py, centre\_g3\_uniform\{,2,3\}.py, centre\_clow\_uniform.py, coverage.py}{cubic/tables/*\_table.txt, cubic/logs/08\_coverage.log}
+\end{certificate}
+
+\subsection{Coverage and proof of Theorem~\ref{thm:cubic-main}}\label{sec:c-coverage}
+
+\begin{proposition}\label{prop:c-coverage}
+Every $(n,m)$ with $n\ge244$, $m\equiv2\pmod3$, $6n+2\le m\le\frac92n^2$ lies in the Laplace regime with saddle in
+$[2.95,3000]$ or $[3000,\infty)$, or in the centre regime with $\xi\in[-0.3,3.4]$.
+\end{proposition}
+\begin{proof}
+(A) The chunks of Certificate~\ref{cert:c-laplace} tile $[2.95,3000]$ with no unresolved balls. (B) $-\cG'(2.95)\ge0.1015>0.0985$
+for all $\epsilon\in[0,1/733]$ and $\cG''>0$, so every pair with $\tilde\mu<0.0985$ has $v>2.95$. (C) $m\ge2N$ gives
+$\tilde\mu\ge0.999\epsilon$. (D) $\tilde\mu\ge0.0985$ implies $\bar\mu>\tilde\mu\ge0.098$. (F)
+$\bar\mu_N(\xi)=N^{-2}\Re \cL'(u^*)$ is decreasing in $\xi$ and, by Lemma~\ref{lem:koksma}, $\bar\mu_N(3.4)\le0.0886<0.098$
+and $\bar\mu_N(-0.3)\ge0.531>\frac12$ for all $N\ge733$, while $m\le\frac92n^2$ gives $\bar\mu<\frac12$. Each item is checked
+by \texttt{coverage.py}.
+\cert{coverage.py}{cubic/logs/08\_coverage.log}
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:cubic-main}]
+Certificate~\ref{cert:c-finite} for $n\le243$; for $n\ge244$ Proposition~\ref{prop:c-band} for $m<6n+2$, and otherwise
+Proposition~\ref{prop:c-coverage} with Lemma~\ref{lem:c-monotone}, Certificate~\ref{cert:c-laplace},
+Proposition~\ref{prop:c-closing} and Certificate~\ref{cert:c-centre}.
+\end{proof}
+
+\medskip\noindent\emph{Load-bearing hand arguments.} The proof of Theorem~\ref{thm:cubic-main} depends on the following
+written arguments in addition to the certificates: Lemmas~\ref{lem:c-tailphase}--\ref{lem:c-poisson},
+Proposition~\ref{prop:c-reduce}, Theorem~\ref{thm:expansion3} (\S\ref{sec:expansion3}), Lemma~\ref{lem:c-scaled}, the
+derivation of the budget~\eqref{eq:c-B}, Lemma~\ref{lem:c-monotone}, the analytic parts of
+Proposition~\ref{prop:c-closing}, Lemma~\ref{lem:c-phase}, and the elementary lemmas of Appendix~\ref{app:elementary}.
+
+\subsection{Proof of Theorem~\ref{thm:expansion3}}\label{sec:expansion3}
+
+We specialise~\eqref{eq:Gp-transform} to $p=\delta=3$; then $G_3^3=P_\infty^3$. Let $\tau=h/k+iz/k^2$, $d=\gcd(3,k)$.
+The eta transformation gives
+\[
+G_3(e^{2\pi i\tau})^3=\Big(\frac3d\Big)^{3/2}e^{3\pi i(-s(h,k)+s(3h/d,k/d))}
+\exp\Big(\frac{\pi(d^2-3)}{12z}-\frac{\pi z}{2k^2}\Big)\widehat G^3,\qquad
+\widehat G=\frac{f(e^{2\pi i dh'_d/k-2\pi d^2/(3z)})}{f(e^{2\pi ih'/k-2\pi/z})},
+\]
+with $hh'\equiv-1\pmod k$ and principal powers.
+
+\emph{Growing and bounded cusps.} If $3\mid k$ then $d=3$, the prefactor has modulus $1$ and the exponential is
+$e^{\pi/(2z)}$: every such cusp grows with $B=\frac12$, and the correction term of $\widehat G^3$ grows only if
+$\delta>24/(p-1)=12$, which is not the case. If $3\nmid k$, then on $\Re(1/z)=w\ge1$, $|G_3^3|\le K_3^3$ with
+$K_3=\sqrt3\,e^{-\pi/18}f(e^{-2\pi/3})f(e^{-2\pi})=1.691256$, the maximum being attained at $w=1$.
+
+\emph{Rademacher dissection.} Take Farey order $N'\ge\sqrt{4\pi i}+1$. On the Ford-circle arcs mapped to
+$K=\{|z-\frac12|=\frac12\}$, the endpoints satisfy $|z'|,|z''|\le\sqrt2k/(N'+1)$ and $\Re z\le2k^2/(N'+1)^2$, so
+$|e^{\pi Cz/k^2}|\le e$ with $C=2i-\frac12$.
+
+\emph{Main terms.} For $3\mid k$, the term $1$ of $\widehat G^3$ gives $\exp(\pi/(2z)+\pi Cz/k^2)$; completing the arc to
+$K$ and using $\frac i{k^2}\int_K\exp(\pi B/z+\pi Cz/k^2)dz=\cP_k(i)$ (Lemma~\ref{lem:bessel-contour}) yields the main term
+with amplitude of modulus $1$, for each of the $\varphi(k)$ values of $h$. The completion costs at most
+$\frac1{k^2}\cdot2\cdot\frac\pi2\cdot\frac{\sqrt2k}{N'+1}e^{1+\pi/2}$ per cusp, and
+$\sum_{3\mid k\le N'}\varphi(k)/k\le\frac29(N'+1)$ because $\varphi(3j)/(3j)\le\frac23$; total
+$E_{\rm arc}=\sqrt2\pi\frac29e^{1+\pi/2}=12.9103$.
+
+\emph{Remainder at growing cusps.} Moving to the chord (length $\le2\sqrt2k/(N'+1)$),
+$|e^{\pi/(2z)}(\widehat G^3-1)|\le e^{\pi w/2}(f(e^{-2\pi w})^3f(e^{-6\pi w})^3-1)$, whose terms $e^{\pi w/2}e^{-2\pi jw}$
+($j\ge1$) are non-increasing, so the maximum is at $w=1$; total
+$E_{\rm rem}=2\sqrt2\frac29e^{1+\pi/2}(f(t)^3f(t^3)^3-1)=0.0463$, $t=e^{-2\pi}$.
+
+\emph{Bounded cusps.} On the chords, the integrand is at most $eK_3^3$; summing $\frac1{k^2}\frac{2\sqrt2k}{N'+1}$ over
+$\le\varphi(k)\le k$ values of $h$ and $k\le N'$ gives $E_{\rm ng}=2\sqrt2eK_3^3=37.1935$.
+
+\emph{The $k=3$ amplitude.} For $k=3$ we have $d=3$, $(3/d)^{3/2}=1$ and $s(3h/d,k/d)=s(h,1)=0$, so the phase of the cusp
+$h/3$ is $e^{-3\pi is(h,3)}$. The Dedekind sums are $s(1,3)=\frac1{18}$ and $s(2,3)=-\frac1{18}$, and the leading term of
+$\widehat G^3$ is $1$. Hence the two cusps contribute $\cP_3(i)$ times
+\[
+e\big(-\tfrac i3\big)e^{-\pi i/6}+e\big(-\tfrac{2i}3\big)e^{\pi i/6}=2\cos\Big(\frac{2\pi i}3+\frac\pi6\Big)=\sqrt3,\ -\sqrt3,\ 0
+\quad(i\equiv0,1,2\bmod 3),
+\]
+that is, $\sqrt3\chi(i)\cP_3(i)$, where $e(x)=e^{2\pi ix}$. (This is also confirmed by the exact agreement recorded in
+Remark~\ref{rem:c-identity}.) For $k\ge6$ only the modulus $1$ of each amplitude is used. Summing,
+$\Econ=E_{\rm arc}+E_{\rm rem}+E_{\rm ng}=50.1501$.
+\cert{sz\_expansion\_audit.py (recomputes the constants)}{cubic/logs/03\_sz\_audit.log}
+\qed

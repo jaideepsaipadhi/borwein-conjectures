@@ -1,0 +1,73 @@
+%=====================================================================
+\section{Standard facts and elementary lemmas}\label{app:facts}
+%=====================================================================
+
+\subsection{Standard facts}
+\begin{fact}[Dedekind eta / partition-function transformation]\label{fact:eta}
+This is Fact~\ref{fact:G5-eta}, in Rademacher's normalisation with $hH\equiv-1\pmod k$ \cite[Thm~5.1]{Apostol}. It was
+confirmed numerically to $10^{-49}$ at $10$ cusps. The form~\eqref{eq:Gp-transform} for $G_p^\delta$ follows from it
+\cite{SZ,Padhi_SZ}.
+\end{fact}
+
+\begin{fact}[Farey dissection]\label{fact:farey}
+The Farey dissection and the Rademacher path via Ford circles (Lemma~\ref{lem:farey}); see \cite[Ch.~5]{Apostol} and
+\cite[Ch.~14]{Rademacher}.
+% TODO: verify section numbers (the source cites Apostol Ch. 5, sections 5.4--5.7); Ch. 5 (pp. 94--112 of the 2nd ed.) confirmed,
+% section numbers and Thm 5.1 not verified online.
+\end{fact}
+
+\begin{fact}[Farey neighbours]\label{fact:neighbours}
+Consecutive fractions $h/k$, $h'/k'$ of order $N$ satisfy $k+k'\ge N+1$ \cite[Thm~30]{HardyWright}.
+\end{fact}
+
+\begin{fact}[Bessel contour integral]\label{fact:bessel-int}
+The Hankel-loop representation of $I_1$ \cite[10.9.19]{DLMF}, \cite[\S6.22]{Watson}. The passage from the loop to the
+vertical line is proved in \S\ref{sec:G5}.
+\end{fact}
+
+\begin{fact}[Bessel facts]\label{fact:bessel}
+$I_\nu(y)>0$ for $y>0$, and $I_\nu(y)$ is decreasing in $\nu\ge0$ for fixed $y>0$ \cite{Cochran,Watson}; the closed forms of
+$I_{1/2}$, $I_{3/2}$ and $I_{5/2}$; and $\cP_p(i)=\sqrt{a_p/x}\,I_1(2\sqrt{a_px})$, $x=i-B/2$, is the inverse Laplace
+transform of $e^{a_p/u}-1$, which follows from the series of $I_1$. These are used in \S\ref{sec:c-finite},
+\S\ref{sec:t-band} and \S\ref{sec:t-repr}.
+\end{fact}
+
+\begin{fact}[identities]\label{fact:identities}
+$\sum_{c=0}^4\Li_2(\omega_5^cx)=\Li_2(x^5)/5$, with the principal branch for $|x|<1$; Euler's pentagonal theorem; Jacobi's
+identity for $(q;q)_\infty^3$.
+\end{fact}
+
+\begin{fact}[complex analysis]\label{fact:complex}
+Cauchy's theorem, Fubini/Tonelli, the maximum principle for subharmonic functions, and Hadamard's three-circles theorem (the
+last two in piece (F)), Poisson summation (Lemma~\ref{lem:c-poisson}).
+\end{fact}
+
+\begin{fact}[arithmetic software]\label{fact:software}
+Arb, through \texttt{python-flint}: every ball returned contains the true value \cite{Arb}. FLINT \texttt{fmpz\_poly}:
+exact integer arithmetic \cite{FLINT}. IEEE-754 correct rounding of $+,-,\times,\div$ is relied on only in the superseded
+float-interval version of piece (F).
+\end{fact}
+
+\subsection{Elementary lemmas}\label{app:elementary}
+
+\begin{lemma}[Cauchy]\label{lem:cauchy}
+If $f$ is holomorphic on $|\zeta-c|\le\rho$ and $|f-f(c)|\le M$ on $|\zeta-c|=\rho$, then
+$|f^{(k)}(z)|\le k!M\rho/(\rho-d)^{k+1}$ for $|z-c|\le d<\rho$, $k\ge1$.
+\end{lemma}
+\begin{proof}
+$f^{(k)}(z)=\frac{k!}{2\pi i}\oint(f(\zeta)-f(c))(\zeta-z)^{-k-1}d\zeta$ and $|\zeta-z|\ge\rho-d$.
+\end{proof}
+
+\begin{lemma}[midpoint rule]\label{lem:midpoint}
+For $g\in C^2[-\frac12,\frac12]$, $|g(0)-\int g|\le\frac18\int|g''|$.
+\end{lemma}
+\begin{proof}
+$g(0)-\int g=-\int K g''$ with $K(t)=\frac12(\frac12-|t|)^2\le\frac18$.
+\end{proof}
+
+\begin{lemma}[Koksma, one node per cell]\label{lem:koksma}
+If $x_i\in[(i-1)h,ih]$ for $i=1,\dots,M$, then $|h\sum f(x_i)-\int_0^1f|\le h\TV(f)+(1-Mh)\sup|f|$.
+\end{lemma}
+\begin{proof}
+$|hf(x_i)-\int_{C_i}f|\le h\TV_{C_i}(f)$; sum, and bound the uncovered part.
+\end{proof}

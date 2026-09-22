@@ -1,0 +1,11 @@
+Title: The remaining residue class of the cubic Borwein conjecture: a computer-assisted proof
+Authors: Jaideep Sai Padhi
+Categories: math.NT (primary), math.CO
+Comments: Computer-assisted proof. Code, certificates and logs: [repository URL]
+Abstract:
+Let P_n(q) = prod_{k<=3n, 3 does not divide k} (1-q^k). The cubic Borwein conjecture of Krattenthaler predicts that the coefficients
+of P_n(q)^3 have the sign pattern + - - according to the exponent modulo 3. Krattenthaler and Wang proved two thirds of it, leaving
+open the non-positivity of the coefficients of q^{3M+2} in the lower half of the range. We prove this remaining case, in the strong
+form [q^m]P_n(q)^3 < 0 for 3n <= m <= 9n^2/2, m = 2 (mod 3). The proof is computer-assisted: exact integer arithmetic for n <= 243,
+and for n >= 244 a reduction to a Laplace integral with positive main term, a band lemma, and a complex saddle-point analysis near the
+centre, with every quantitative inequality established uniformly in n by ball-arithmetic certificates. All code and logs are public.

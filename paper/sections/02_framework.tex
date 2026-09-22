@@ -1,0 +1,165 @@
+%=====================================================================
+\section{The general framework}\label{sec:framework}
+%=====================================================================
+
+Throughout, $(p,\delta)$ is one of the two cases
+\[
+(p,\delta)=(3,3)\quad\text{(Section~\ref{sec:cubic})},\qquad (p,\delta)=(5,1)\quad\text{(Section~\ref{sec:third})},
+\]
+and $c_n(m)=[q^m]P_{p,n}(q)^\delta$.
+
+\subsection{Notation}\label{sec:notation}
+Table~\ref{tab:notation} fixes the symbols shared by the two parts. Where the two source proofs used one letter for
+different objects, one of them has been renamed; symbols that are local to a single subsection are defined where they are
+used and are not listed.
+
+\begin{table}[h]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}p{0.23\textwidth}p{0.72\textwidth}@{}}
+\toprule
+symbol & meaning\\
+\midrule
+$P_{p,n}$; $P_n$ & $\prod_{k\le pn,\,p\nmid k}(1-q^k)$; in \S\ref{sec:cubic} and \S\ref{sec:third} $p$ is fixed and we write $P_n$\\
+$c_n(m)$ & $[q^m]P_{p,n}^\delta$; $\deg P_{p,n}^\delta=\delta(p-1)pn^2/2$ ($9n^2$ for $p=3$, $10n^2$ for $p=5$)\\
+$G_p$; $s(i)$ & $(q;q)_\infty/(q^p;q^p)_\infty=\prod_{p\nmid k}(1-q^k)$; $s(i)=[q^i]G_p^\delta$\\
+$E_n$; $e(j)$ & $\prod_{k>pn,\,p\nmid k}(1-q^k)^{-\delta}$, so that $P_{p,n}^\delta=G_p^\delta E_n$; $e(j)=[q^j]E_n\ge0$\\
+$N$ & $pn+1$ (the smallest part of $E_n$); in \S\ref{sec:G5} only, $N$ is the Farey order\\
+$\omega_p$ & $e^{2\pi i/p}$ (so $\omega_3=\omega$ of \S\ref{sec:cubic}, $\omega_5$ of \S\ref{sec:third})\\
+$B$, $C$ & $B=\delta(p-1)/12$ ($=\frac12$ resp.\ $\frac13$), $C=C(i)=2i-B$\\
+$\cP_k(i)$ & $\frac{2\pi}{k}\sqrt{B/C}\,I_1\big(\frac{2\pi}{k}\sqrt{BC}\big)$ for $i\ge1$; $\cP_k(i)=0$ for $i\le0$\\
+$a_k$; $a_p$ & $a_k=2\pi^2B/k^2$; so $a_3=\pi^2/9$ (cubic), $a_5=2\pi^2/75$ (Third), and
+$\cP_p(i)=\sqrt{a_p/x}\,I_1(2\sqrt{a_px})$ with $x=i-B/2$\\
+$\fa(i)$ & the amplitude of the $k=p$ main term: $\fa(i)=\sqrt3\chi(i)$ for $p=3$; $\fa(i)=2\cos(2\pi i/5+\pi/5)+2\cos(4\pi i/5)$ for $p=5$\\
+$K(i)$ & $\lfloor\sqrt{4\pi i}\rfloor+2$\\
+$\Econ$ & error constant of the expansion: $50.1501$ ($p=3$), $27.4636$ ($p=5$)\\
+$\mu$ & $m/\deg P_{p,n}^\delta$, so the half-range is $\mu\le\frac12$ (used in \S\ref{sec:third});
+in \S\ref{sec:cubic} the centre is parametrised by $\bar\mu=m/N^2$ and $\tilde\mu=(m-N-\frac14)/N^2$\\
+$W$ & real part of the Laplace variable ($w=W+iy$ in \S\ref{sec:cubic}, $u=W(1+i\eta)$ in \S\ref{sec:third})\\
+$v$; $V$ & scaled saddle: $v=NW$ in \S\ref{sec:cubic}; $V=pnW=5nW$ in \S\ref{sec:third}\\
+$\lambda$ & $m/N$ (\S\ref{sec:third}; the band is $\lambda<4$)\\
+$\cL$; $L$ & $\cL(u)=3\sum_{k\le3n,3\nmid k}\log(1-e^{ku})$ (cubic centre); $L$ the radial parameter $r=e^{-L/(5n)}$
+(Third centre)\\
+$\Li_s$ & polylogarithm, $\Li_1(x)=-\log(1-x)$\\
+$B_1,B_2$; $\tilde B_k$ & $B_1(x)=x-\frac12$, $B_2(x)=x^2-x+\frac16$; $\tilde B_k$ their $1$-periodic extensions\\
+class & $m\bmod p$\\
+\bottomrule
+\end{tabular}
+\caption{Notation shared by Sections~\ref{sec:cubic} and~\ref{sec:third}.}
+\label{tab:notation}
+\end{table}
+
+\subsection{Factorisation, palindromy and vanishing classes}
+
+\begin{lemma}[factorisation]\label{lem:factor}
+$P_{p,n}^\delta=G_p^\delta\,E_n$. The series $E_n$ has non-negative coefficients, $e(0)=1$ and $e(j)=0$ for $0<j<N$.
+Consequently
+\[
+c_n(m)=\sum_{j\ge0}e(j)\,s(m-j)=s(m)+\sum_{j\ge N}e(j)s(m-j).
+\]
+\end{lemma}
+\begin{proof}
+$G_p=\prod_{p\nmid k}(1-q^k)$. Split this product at $k=pn$: the factor over $k>pn$ is $E_n^{-1/\delta}$, and $E_n$ is a
+product of ($\delta$-th powers of) geometric series in $q^k$ with $k\ge pn+1=N$.
+\end{proof}
+
+\begin{lemma}[palindromy]\label{lem:palin}
+$P_{p,n}^\delta$ is palindromic of degree $D=\delta(p-1)pn^2/2$. The map $m\mapsto D-m$ preserves the class $0$ and maps
+the class $s$ to $-s$. Hence the sign patterns of Conjectures~\ref{conj:cubic} and~\ref{conj:third} need only be proved
+for $0\le m\le D/2$.
+\end{lemma}
+\begin{proof}
+$P_{p,n}$ is a product of $(p-1)n$ factors $1-q^k$, each satisfying $q^k(1-q^{-k})=-(1-q^k)$, and
+$\sum_{k\le pn,\,p\nmid k}k=\frac{pn(pn+1)}2-\frac{p\,n(n+1)}2=\frac{(p-1)pn^2}{2}$. For $p=3$ the sign is
+$(-1)^{2n\cdot3}=1$ and $D=9n^2$; for $p=5$ it is $(-1)^{4n}=1$ and $D=10n^2$. In both cases $p\mid D$. For $p=3$ the
+classes $1,2$ are exchanged and carry the same conjectured sign; for $p=5$ the classes $1\leftrightarrow4$ and
+$2\leftrightarrow3$ are exchanged, and again the conjectured sign is invariant under $s\mapsto-s$.
+\end{proof}
+
+\begin{lemma}[vanishing classes]\label{lem:vanish}
+\begin{enumerate}
+\item[(a)] ($p=3$, $\delta=3$.) $s(i)=[q^i]G_3^3=0$ for $i\equiv2\pmod3$.
+\item[(b)] ($p=5$, $\delta=1$.) $s(i)=[q^i]G_5=0$ for $i\equiv3,4\pmod5$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) By Jacobi's identity $(q;q)_\infty^3=\sum_{j\ge0}(-1)^j(2j+1)q^{j(j+1)/2}$, and $j(j+1)/2\equiv0,1,0\pmod3$ for
+$j\equiv0,1,2$. So $(q;q)_\infty^3$ is supported on the classes $\{0,1\}$, and $G_3^3=(q;q)^3_\infty/(q^3;q^3)^3_\infty$ is
+this series times a series in $q^3$.
+
+(b) By Euler's pentagonal theorem, $(q;q)_\infty=\sum_{k\in\Z}(-1)^kq^{k(3k-1)/2}$. Modulo $5$ the exponent $k(3k-1)/2$
+takes the values $0,1,0,2,2$ for $k\equiv0,1,2,3,4$. So $(q;q)_\infty$ is supported on the residues $\{0,1,2\}$, and
+multiplying by $1/(q^5;q^5)_\infty$, a series in $q^5$, preserves this.
+\end{proof}
+
+In the vanishing (``thin'') classes the main term of $s(m)$ is absent and the sign of $c_n(m)$ is produced by the
+convolution with $E_n$.
+
+\subsection{The circle-method expansion of the eta-quotient}\label{sec:circle-general}
+
+Let $f(x)=\prod_{m\ge1}(1-x^m)^{-1}$, $\tau=h/k+iz/k^2$ with $\Re z>0$, $(h,k)=1$, and $d=\gcd(p,k)$. The eta
+transformation, in the form of \cite[Prop.~7]{SZ} with the Hardy--Ramanujan convention $hh'\equiv-1\pmod k$
+\cite{Padhi_SZ}, gives
+\begin{equation}\label{eq:Gp-transform}
+G_p(e^{2\pi i\tau})^\delta=\Big(\frac pd\Big)^{\delta/2}e^{\pi i\delta(-s(h,k)+s(ph/d,k/d))}
+\exp\Big(\frac{\pi\delta(d^2-p)}{12pz}-\frac{(p-1)\pi\delta z}{12k^2}\Big)\widehat G^\delta,
+\end{equation}
+where
+\[
+\widehat G=\frac{f(e^{2\pi idh'_d/k-2\pi d^2/(pz)})}{f(e^{2\pi ih'/k-2\pi/z})},
+\]
+with $s(h,k)$ the Dedekind sum and principal powers. For our two cases this has the following structure.
+\begin{itemize}
+\item \emph{Growing cusps} ($p\mid k$, $d=p$). The prefactor is unimodular and the exponential is
+$\exp(\pi B/z-\pi Bz/k^2)$ with $B=\delta(p-1)/12$. The first correction term of $\widehat G^\delta$ grows only if
+$\delta>24/(p-1)$, which is not the case for $(3,3)$ or $(5,1)$. Integrated over the Ford circle, the leading term gives
+the Bessel main term $\cP_k(i)$, since $\frac{i}{k^2}\oint_K\exp(\pi B/z+\pi Cz/k^2)\,dz=\cP_k(i)$ for the circle
+$K=\{|z-\frac12|=\frac12\}$ oriented clockwise (Lemma~\ref{lem:bessel-contour}).
+\item \emph{Bounded cusps} ($p\nmid k$). On $\Re(1/z)\ge1$, $|G_p^\delta|\le K_p^\delta$ with
+$K_p=\sqrt p\,e^{-\pi(p-1)/(12p)}f(e^{-2\pi/p})f(e^{-2\pi})$.
+\end{itemize}
+Carrying out the Rademacher dissection with Farey order at least $\sqrt{4\pi i}+1$ and moving each integral to the chord
+of its Ford arc gives an expansion of the form
+\begin{equation}\label{eq:expansion-shape}
+s(i)=\fa(i)\,\cP_p(i)+\rho(i),\qquad
+|\rho(i)|\le\sum_{\substack{2p\le k\le K(i)\\ p\mid k}}\varphi(k)\cP_k(i)+\Econ ,
+\end{equation}
+with an explicit constant $\Econ=E_{\rm arc}+E_{\rm rem}+E_{\rm ng}$ (arc completion, remainder at growing cusps, bounded
+cusps). The two instances are Theorem~\ref{thm:expansion3} ($p=3$; proved in \S\ref{sec:expansion3}) and
+Theorem~\ref{thm:G5} ($p=5$; proved in full in \S\ref{sec:G5}). The main-term amplitude $\fa(i)$ at the cusps of
+denominator $p$ is computed exactly from the Dedekind sums $s(h,p)$, and it vanishes precisely on the thin classes of
+Lemma~\ref{lem:vanish}.
+
+\subsection{The region decomposition}\label{sec:regions}
+
+For each $n$ the half-range $0\le m\le D/2$ is covered by the following regions (the precise thresholds are in
+Tables~\ref{tab:regions3} and~\ref{tab:regions5}).
+\begin{enumerate}
+\item \textbf{Exact range}, $n\le n_0$: exact computation of $P_{p,n}^\delta$ in $\Z[q]$.
+\item \textbf{Band}, $m<cN$ with $c=2$ ($p=3$) or $c=4$ ($p=5$): since $e(j)=0$ for $0<j<N$, only partitions of $j$
+into at most $c-1$ parts from $E_n$ contribute, and $c_n(m)$ is a short explicit sum of values $s(i)$.
+\item \textbf{Laplace region}: the main term of~\eqref{eq:expansion-shape} is represented as a Laplace-type integral
+(Poisson form for $p=3$, Bessel--Laplace form for $p=5$), convolved with $E_n$ at a twisted point, and evaluated by a
+saddle-point analysis in scaled variables. The remainder $\rho$ is bounded by Rankin's trick at the same saddle.
+\item \textbf{Centre}: Cauchy's formula for the polynomial, evaluated through the saddles near the primitive $p$-th roots
+of unity, together with bounds for the rest of the circle.
+\end{enumerate}
+
+\subsection{Ball-arithmetic certificates}\label{sec:certs-general}
+
+Every inequality on which an analytic region rests is reduced to finitely many inequalities between explicit functions
+of a few real parameters and verified in ball arithmetic (Arb \cite{Arb}, via \texttt{python-flint}). A ball computation
+returns an enclosure of the exact value over the whole parameter ball; an inequality is \emph{certified} on a ball when
+the enclosure lies strictly on the correct side. The parameter domains are covered by finitely many balls (tiles);
+failing balls are bisected. Every program aborts on a failed assertion and prints a summary line, and it is that line
+which constitutes the certificate (\S\ref{sec:computations}).
+
+Uniformity in $n$ uses two devices.
+\begin{itemize}
+\item \emph{Analyticity in $1/N$.} After scaling, the integrands are analytic in $\epsilon=1/N$ at $\epsilon=0$, so one
+ball $\epsilon\in[0,\epsilon_1]$ covers all $N\ge1/\epsilon_1$ (\S\ref{sec:cubic}).
+\item \emph{Monotonicity.} Every term depending on $n$ (or on a scaled size parameter $X$) is of the form
+$n^ae^{-nb}$, or a finite sum of such terms, and a certified inequality on the exponents shows that it is non-increasing
+in $n$ beyond the base point. One evaluation at the base point then covers all larger $n$.
+\end{itemize}

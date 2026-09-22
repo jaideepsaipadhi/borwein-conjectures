@@ -1,0 +1,2 @@
+(a) band identity c_n(m) = 3 sum g(i) for all n<=60, 3n+2<=m<2N: True
+(b) g(i) < 0 exactly for all i <= 36000: True  (120s)

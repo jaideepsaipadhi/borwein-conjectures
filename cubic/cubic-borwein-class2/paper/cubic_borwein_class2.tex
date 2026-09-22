@@ -1,0 +1,435 @@
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{certificate}[theorem]{Certificate}
+
+\newcommand{\eps}{\varepsilon}
+\newcommand{\Rh}{\widehat{R}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\DeclareMathOperator{\Li}{Li}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+
+\begin{document}
+
+\title[The remaining class of the cubic Borwein conjecture]
+{The remaining residue class of the cubic Borwein conjecture: \\ a computer-assisted proof}
+
+\author{Jaideep Sai Padhi}
+\address{Purdue University, West Lafayette, IN 47907, USA}
+\email{jpadhi@purdue.edu}
+\date{\today}
+\subjclass[2020]{Primary 11P82; Secondary 05A17, 41A60, 65G20}
+\keywords{Borwein conjecture, sign patterns, circle method, saddle point method, interval arithmetic, computer-assisted proof}
+
+\begin{abstract}
+Let $P_n(q)=\prod_{k\le 3n,\,3\nmid k}(1-q^k)$. The cubic Borwein conjecture of Krattenthaler predicts that the coefficients of
+$P_n(q)^3$ have the sign pattern $+\,-\,-$ according to the exponent modulo $3$. Krattenthaler and Wang proved two thirds of it,
+leaving open the non-positivity of the coefficients of $q^{3M+2}$ in the lower half of the range (equivalently, of $q^{3M+1}$ in the
+upper half). We prove this remaining case, in the strong form $[q^m]P_n(q)^3<0$ for $3n\le m\le\frac92n^2$, $m\equiv2\pmod 3$.
+
+The proof is computer-assisted. For $n\le243$ the claim is verified by exact integer arithmetic. For $n\ge244$ we use a
+reduction in which the class-$2$ coefficient becomes a Laplace integral with positive main term, a band lemma just above the
+cutoff, and a complex saddle-point analysis of $P_n^3$ near the centre of the range. Every quantitative inequality needed for
+$n\ge244$ is established \emph{uniformly in $n$} by explicit ball-arithmetic certificates, whose parameter domains are shown to
+cover all admissible $(n,m)$. All code and logs are public.
+\end{abstract}
+
+\maketitle
+
+%======================================================================
+\section{Introduction}
+%======================================================================
+
+\subsection{The conjectures}
+Write $P_n(q)=\prod_{k\le 3n,\,3\nmid k}(1-q^k)=(q;q)_{3n}/(q^3;q^3)_n$ and $c_n(m)=[q^m]P_n(q)^3$. The polynomial $P_n^3$ has
+degree $9n^2$ and is palindromic, so it suffices to consider $m\le\frac92n^2$. Peter Borwein conjectured that $P_n$ has the sign
+pattern $+--$ (the First Borwein Conjecture), and that the same holds for $P_n^2$ (the Second). Andrews \cite{Andrews1995} obtained
+partial results. The First Borwein Conjecture was proved by Wang \cite{Wang2022}. Krattenthaler and Wang \cite{KW} developed an
+asymptotic framework which gave a new proof of the first conjecture, a proof of the second, and a proof of ``two thirds'' of the
+following cubic analogue, due to Krattenthaler.
+
+\begin{conjecture}[cubic Borwein conjecture]\label{conj}
+For $n\ge1$ and $0\le m\le\frac92n^2$: $c_n(m)\ge0$ if $m\equiv0$, and $c_n(m)\le0$ if $m\equiv1,2\pmod 3$.
+\end{conjecture}
+
+The case left open in \cite[\S11]{KW} is non-positivity of $c_n(3M+2)$ for $3M+2\le\frac92n^2$ (and, by palindromy, of the
+coefficients of $q^{3M+1}$ in the upper half).
+
+\begin{theorem}\label{thm:main}
+For all $n\ge1$ and all $m\equiv2\pmod3$ with $m\le\frac92n^2$: $c_n(m)=0$ if $m<3n$, and $c_n(m)<0$ if $3n\le m\le\frac92n^2$.
+\end{theorem}
+
+Together with \cite{KW} this proves Conjecture~\ref{conj}.
+
+\subsection{Why the class $m\equiv 2$ is different}
+Put $P_\infty(q)=\prod_{3\nmid k}(1-q^k)$ and $E_n(q)=P_\infty^3/P_n^3=\prod_{k>3n,\,3\nmid k}(1-q^k)^{-3}$. Since
+$P_\infty^3=(q;q)_\infty^3/(q^3;q^3)_\infty^3$ and Jacobi's identity $(q;q)_\infty^3=\sum_{j\ge0}(-1)^j(2j+1)q^{j(j+1)/2}$ involves
+only exponents $\equiv0,1\pmod 3$, the class-$2$ coefficients of $P_\infty^3$ vanish identically. Hence $c_n(3M+2)$ is produced
+entirely by the tail $E_n$, and at the dominant cusp the leading saddle-point contribution cancels. The class-$2$ coefficient is
+exponentially smaller than the terms it is built from, and the first-order analysis of \cite{KW} does not determine its sign.
+
+\subsection{Strategy}
+Let $\omega=e^{2\pi i/3}$, $a=\pi^2/9$, $N=3n+1$. The proof has four parts.
+\begin{enumerate}
+\item \emph{Exact computation} for $n\le243$ (\S\ref{sec:finite}).
+\item \emph{Band lemma} for $3n+2\le m<6n+2$ (\S\ref{sec:band}): here $c_n(m)=3\sum_{i\le M-n}\bigl(p_3(3i)+p_3(3i+1)\bigr)$ and each
+summand is negative.
+\item \emph{Laplace regime} (\S\ref{sec:laplace}). Writing $\log E_n(\omega q)=S+i\Delta$, one has $0<\Delta<\pi/2$ on $(0,1)$
+(Lemma~\ref{lem:tailphase}), so the phase $\Rh(w)=a/w+(m-\frac14)w+S+\log\sin\Delta$ is real on the positive axis and the class-$2$
+coefficient becomes a real Laplace integral with positive main term (Proposition~\ref{prop:reduce}). We bound it uniformly in $n$ for
+$\tilde\mu:=(m-N-\frac14)/N^2<0.0985$.
+\item \emph{Centre regime} (\S\ref{sec:centre}): for $\mu:=m/N^2\ge0.098$ we work with $P_n(q)^3$ directly at complex saddles near
+$q=r\omega^{\pm1}$, again uniformly in $n$.
+\end{enumerate}
+
+\subsection{The role of the computer}
+The computer is used in two ways: an exact integer computation (\S\ref{sec:finite}), and the rigorous enclosure, in midpoint-radius
+(ball) arithmetic \cite{Arb}, of explicitly stated real inequalities on explicit coverings of compact parameter domains
+(\S\S\ref{sec:band}--\ref{sec:centre}). No floating-point value enters a proof step. Uniformity in $n$ is obtained by treating
+$\epsilon=1/N$ as an interval variable containing $0$, together with explicit monotonicity statements. Each certificate is a named
+script; \S\ref{sec:computations} lists them with what they certify, and \S\ref{sec:checks} lists independent consistency checks that
+are \emph{not} part of the proof.
+
+%======================================================================
+\section{Structural lemmas and the reduction}\label{sec:structural}
+%======================================================================
+
+Throughout $h(y)=\log(1+e^{-y}+e^{-2y})$, $\Phi(v)=\int_v^\infty h=\Li_2(e^{-v})-\frac13\Li_2(e^{-3v})$, $\Psi(v)=2\Li_2(e^{-v})$,
+and $\Phi(0)=a$.
+
+\begin{lemma}[tail phase]\label{lem:tailphase}
+For $0<q<1$: $\Im\log E_n(\omega q)=3\sum_{A\ge n}\bigl[f(q^{3A+1})-f(q^{3A+2})\bigr]\in(0,\pi/2)$, where
+$f(x)=\arctan\bigl(\sqrt3x/(2+x)\bigr)$.
+\end{lemma}
+\begin{proof}
+$\log E_n(\omega q)=-3\sum_{k>3n,\,3\nmid k}\log(1-\omega^kq^k)$ and $\Im\log(1-\omega x)=-f(x)$ for $x\in(0,1)$, with the sign
+reversed for $\bar\omega$. Each bracket is positive since $f$ is increasing. Also $f(q^{3A+1})-f(q^{3A+2})\le f(q^{3A+1})-f(q^{3A+4})$,
+which telescopes to at most $f(q^{3n+1})<\pi/6$.
+\end{proof}
+
+\begin{lemma}[closed forms]\label{lem:closed}
+For $|q|<1$, with $\chi'(r)=\pm1$ for $r\equiv\pm1\pmod3$,
+\[
+\log E_n(\omega q)=S(q)+i\Delta(q),\quad
+S=\sum_{3\nmid r}\frac{-3}{2r}\frac{q^{Nr}+q^{(N+1)r}}{1-q^{3r}}+\sum_{3\mid r}\frac{3}{r}\frac{q^{Nr}+q^{(N+1)r}}{1-q^{3r}},\quad
+\Delta=\sum_{3\nmid r}\frac{3\sqrt3\,\chi'(r)}{2r}\,\frac{q^{Nr}(1-q^r)}{1-q^{3r}},
+\]
+and $\Im E_n(\omega q)=e^{S}\sin\Delta$ as holomorphic functions. For real $q$, $S,\Delta$ are real.
+\end{lemma}
+\begin{proof}
+Expand $-3\log(1-\omega^kq^k)=3\sum_{r\ge1}\omega^{kr}q^{kr}/r$ and sum over $k=3A+1$, $3A+2$ with $A\ge n$; then
+$\omega^r,\omega^{2r}\in\{1,\omega,\bar\omega\}$ gives the real and imaginary parts termwise. Both sides are holomorphic in $|q|<1$.
+\end{proof}
+
+\subsection{The expansion of $p_3$}
+Let $p_3(i)=[q^i]P_\infty(q)^3$, $B=\frac12$, and for $k\ge1$
+\[
+\cP_k(i)=\frac{2\pi}{k}\sqrt{\frac{B}{2i-B}}\;I_1\Bigl(\frac{2\pi}{k}\sqrt{B(2i-B)}\Bigr),\qquad \cP_3(i)=\sqrt{\frac{a}{i-\frac14}}\,I_1\bigl(2\sqrt{a(i-\tfrac14)}\bigr).
+\]
+Let $\chi(i)=1,-1,0$ for $i\equiv0,1,2\pmod3$.
+
+\begin{proposition}[explicit expansion; Appendix~\ref{app:expansion}]\label{prop:expansion}
+For every $i\ge1$,
+\[
+p_3(i)=\sqrt3\,\chi(i)\,\cP_3(i)+\rho(i),\qquad
+|\rho(i)|\le\sum_{\substack{3\mid k\le K(i)\\ k\ge6}}\varphi(k)\,\cP_k(i)+E_{\rm con},\qquad K(i)=\lceil\sqrt{4\pi i}\,\rceil+1,
+\]
+with $E_{\rm con}=50.1501$.
+\end{proposition}
+
+\begin{lemma}[Poisson form]\label{lem:poisson}
+$\cP(q):=\sum_{i\ge1}\cP_3(i)q^i$ satisfies, for $q=e^{-w}$, $\Re w>0$, $|\Im w|\le\pi$,
+\[
+\cP(e^{-w})=e^{-w/4}\bigl(e^{a/w}+\eta(w)\bigr),\qquad \eta(w)=-1+\sum_{k\ne0}(-i)^k\bigl(e^{a/(w+2\pi ik)}-1\bigr),\qquad|\eta(w)|\le 2.
+\]
+\end{lemma}
+\begin{proof}
+With $F(x)=\sqrt{a/x}\,I_1(2\sqrt{ax})$ for $x>0$ and $F=0$ for $x\le0$ we have $\int_0^\infty F(x)e^{-wx}dx=e^{a/w}-1$. Poisson
+summation over the shifted lattice $x=i-\frac14$ gives the formula. For the bound write $e^u-1=u+r(u)$; $\sum_{k\ne0}|r|\le
+\frac{a^2}6e^{a/\pi}<0.285$, and the linear part, grouped in blocks of four consecutive $k$, is at most $0.714$. A ball-arithmetic
+enclosure over $\Re w\in(0,10]$, $|\Im w|\le\pi$ gives $|\eta|\le1.42$ (\texttt{poisson\_check.py}).
+\end{proof}
+
+\begin{proposition}[reduction]\label{prop:reduce}
+Let $m\equiv2\pmod 3$ and let $e(j)\ge0$ be the coefficients of $E_n$. Then
+\[
+c_n(m)=L(m)+R(m),\qquad L(m)=-2\,\Im\,[q^m]\,\cP(q)E_n(\omega q),\qquad R(m)=\sum_j e(j)\rho(m-j),
+\]
+and for every $W>0$,
+\[
+|R(m)|\le \sum_{\substack{3\mid k\le K(m)\\k\ge6}}3\varphi(k)\,e^{mW+a_k/W}E_n(e^{-W})+E_{\rm con}\,e^{mW}E_n(e^{-W}),\qquad a_k=a(3/k)^2 .
+\]
+Moreover $[q^m]\cP(q)E_n(\omega q)=J_0+J_\eta$ with, on the line $w=W+iy$,
+\[
+J_0=\frac1{2\pi}\int_{-\pi}^{\pi}e^{a/w+(m-\frac14)w}E_n(\omega e^{-w})\,dy,\qquad
+J_\eta=\frac1{2\pi}\int_{-\pi}^{\pi}e^{(m-\frac14)w}\eta(w)E_n(\omega e^{-w})\,dy,
+\]
+and $\Im J_0=\frac1{2\pi}\int_{-\pi}^{\pi}\Re e^{\Rh(W+iy)}\,dy$ with $\Rh(w)=a/w+(m-\frac14)w+S(e^{-w})+\log\sin\Delta(e^{-w})$.
+In particular $c_n(m)<0$ whenever
+\begin{equation}\label{eq:signcrit}
+\frac1{2\pi}\int_{-\pi}^{\pi}\Re e^{\Rh(W+iy)}dy\;>\;\frac1{2\pi}\int_{-\pi}^{\pi}3\,e^{(m-\frac14)W}\bigl|\Im E_n(\omega e^{-W-iy})\bigr|\,dy+\frac{|R(m)|}2 .
+\end{equation}
+\end{proposition}
+\begin{proof}
+$c_n(m)=\sum_je(j)p_3(m-j)$. Insert Proposition~\ref{prop:expansion}. Since $\sqrt3\chi(i)=-2\Im\omega^{-i}\cdot(-1)^{?}$ is encoded by
+the identity $\sum_je(j)\sqrt3\chi(m-j)\cP_3(m-j)=-2\Im\sum_je(j)\omega^j\cP_3(m-j)$ for $m\equiv2$ (check the three residues of $j$),
+the main part is $L(m)$. For $R(m)$ use $e(j)\ge0$, $\cP_k\ge0$, $|\text{amplitude}|\le\varphi(k)$, Cauchy's estimate on $|q|=e^{-W}$,
+and $\sum_i\cP_k(i)e^{-Wi}\le(1+2a_k)e^{a_k/W}\le3e^{a_k/W}$ (from $I_1(y)\le\frac y2e^y$ and the Laplace transform). The integral
+formula is Cauchy's formula with Lemma~\ref{lem:poisson}; the coefficients of $\cP\cdot\Im E_n(\omega\,\cdot)$ are real, so $\Im J$
+equals the integral of the real part of $e^{a/w+(m-\frac14)w}\Im E_n(\omega e^{-w})=e^{\Rh}$ (Lemma~\ref{lem:closed}), plus the
+$\eta$-part bounded by $|\eta|\le 3$ in modulus. Finally $\Im J>|R|/2$ gives $c_n(m)=-2\Im J+R<0$.
+\end{proof}
+
+\begin{remark}
+On the real axis $\sin\Delta>0$ by Lemma~\ref{lem:tailphase}, so $\Rh$ is real there. We always take $W$ to be the real saddle of $\Rh$.
+Writing $\log\sin\Delta=\log Q-Nw+\log\bigl(\sin\Delta/\Delta\bigr)$ with $Q=\Delta\,e^{Nw}$, the saddle equation reads
+$-a/W^2+(m-N-\frac14)+\partial_w(S+\log Q+\log\frac{\sin\Delta}{\Delta})=0$: the effective parameter is
+$\tilde\mu=(m-N-\frac14)/N^2$, not $m/N^2$.
+\end{remark}
+
+%======================================================================
+\section{The finite range $n\le243$}\label{sec:finite}
+%======================================================================
+\begin{certificate}[\texttt{exact/cubic\_check.c}]\label{cert:finite}
+For $1\le n\le243$ and every $m\equiv2\pmod3$, $m\le\frac92n^2$: $c_n(m)=0$ for $m<3n$ and $c_n(m)<0$ for $3n\le m$.
+\end{certificate}
+The program multiplies out $P_n^3$ in exact GMP integers, applying $(1-q^k)^3=1-3q^k+3q^{2k}-q^{3k}$ in one descending pass per $k$,
+and checks the sign of every class-$2$ coefficient.
+
+%======================================================================
+\section{The band $3n+2\le m<6n+2$}\label{sec:band}
+%======================================================================
+\begin{proposition}\label{prop:band}
+Let $n\ge1$, $m=3M+2$ with $3n+2\le m<6n+2$. Then $c_n(m)=3\sum_{i=0}^{M-n}g(i)$ with $g(i)=p_3(3i)+p_3(3i+1)$, and $g(i)<0$ for all
+$i\ge0$. Hence $c_n(m)<0$.
+\end{proposition}
+\begin{proof}
+For $j<2N$ the coefficient $e(j)$ equals $1$ at $j=0$, $3$ for $N\le j<2N$ with $3\nmid j$, and $0$ otherwise. Since $p_3(m)=0$,
+$c_n(m)=3\sum_{N\le K\le m,\,3\nmid K}p_3(m-K)$; for $K=3A+1$ and $K=3A+2$ ($n\le A\le M$) the arguments are $3(M-A)+1$ and $3(M-A)$.
+The negativity of $g$ is Certificate~\ref{cert:band}.
+\end{proof}
+
+\begin{certificate}[\texttt{band\_certificate.py}]\label{cert:band}
+(a) $g(i)<0$ for $0\le i\le2000$, by exact integers ($p_3$ from Jacobi's identity and the recurrence for $1/(q;q)_\infty^3$).
+(b) For $i>2000$, by Proposition~\ref{prop:expansion},
+$-g(i)\ge\sqrt3\bigl(\cP_3(3i+1)-\cP_3(3i)\bigr)-|\rho(3i)|-|\rho(3i+1)|$, with
+$\cP_3(j+1)-\cP_3(j)\ge aI_2(2\sqrt{a(j-\frac14)})/(j+\frac34)$ and the envelopes $\kappa(x_0)e^x/\sqrt{2\pi x}\le I_\nu(x)\le
+e^x/\sqrt{2\pi x}$ ($x\ge x_0$). The resulting ratio is a finite sum of terms $Cj^pe^{-g\sqrt{j}}$ with $p\le3$, $g\ge2\pi/9$, hence
+decreasing for $j\ge74$, and at $j=6000$ it is below $10^{-33}$.
+\end{certificate}
+
+%======================================================================
+\section{The Laplace regime $\tilde\mu<0.0985$}\label{sec:laplace}
+%======================================================================
+
+Here $n\ge244$ and $m\ge2N$. We verify \eqref{eq:signcrit} uniformly in $N\ge733$.
+
+\subsection{Scaled variables}
+Put $\epsilon=1/N$ and $\zeta=Nw$. With $g(x)=x/(1-e^{-x})$ and $h(x)=(1-e^{-x})/(1-e^{-3x})=g(3x)/(3g(x))$, Lemma~\ref{lem:closed} gives
+$S=N\,\widetilde S(\zeta,\epsilon)$ and $Q=\widetilde Q(\zeta,\epsilon)$ where
+\[
+\widetilde S=\sum_r s_r\,e^{-r\zeta}\bigl(1+e^{-r\zeta\epsilon}\bigr)\frac{g(3r\zeta\epsilon)}{3r\zeta},\qquad
+\widetilde Q=\sum_{3\nmid r}\frac{3\sqrt3\chi'(r)}{2r}e^{-(r-1)\zeta}h(r\zeta\epsilon),
+\]
+$s_r=-\frac3{2r}$ ($3\nmid r$), $\frac3r$ ($3\mid r$). Both are analytic in $\epsilon$ near $\epsilon=0$ because $g$ is (its Taylor
+coefficients are the Bernoulli numbers; we use the truncated series with the remainder bound $|b_k|\le4(2\pi)^{-k}$). Then
+\[
+\Rh(w)=N\,G(\zeta)+\frac{(m-N-\frac14)\zeta}{N},\qquad G(\zeta)=\frac a\zeta+\widetilde S+\epsilon\bigl(\log\widetilde Q+\log\tfrac{\sin\Delta}{\Delta}\bigr),
+\]
+and the real saddle $v=NW$ satisfies $-G'(v)=\tilde\mu$. We parametrise by the pair $(v,\epsilon)$; a ball of pairs covers all
+$(N,m)$ whose saddle and $1/N$ lie in it.
+
+\subsection{The certificate for one ball}
+Fix a ball $V\ni v$, $E\ni\epsilon$, $E\subset[0,1/733]$, and let $N_b=\max(733,1/\sup E)$ be the smallest $N$ it contains. Write
+$\sigma_y=N^{-3/2}G''(v)^{-1/2}$ and $\tau=y/\sigma_y$. The certificate \texttt{B\_uniform.py} computes, in ball arithmetic:
+\begin{enumerate}
+\item \emph{Window} $|\tau|\le c$ ($c\in\{2,2.5,3\}$). Taylor expansion of $G$ at $v$ to order four with coefficients
+$G_3=\sqrt\epsilon|G'''|/G''^{3/2}$, $\phi_4=\epsilon G''''/G''^2$, and a fifth-order remainder bounded by Cauchy's estimate on the
+circle $|\zeta-v|=0.6v$ (the $a/\zeta$ part exactly). This gives a pointwise lower bound $L(\tau)$ for $\Re e^{\Rh-\Rh(W)}$ and the
+lower bound $\sigma_y\int_{-c}^cL$.
+\item \emph{Zone 1}, $\tau\in[c,\tau_s]$ with $t_s=N_b\sigma_y\tau_s$ fixed: $\Rh(W+iy)-\Rh(W)\le-\kappa\tau^2/2$, where $\kappa$ comes from
+even-order Taylor terms and Cauchy bounds for the sixth derivative of $a/\zeta+\widetilde S$ and of $\log\widetilde Q+\log\frac{\sin\Delta}{\Delta}$;
+$\kappa$ is non-decreasing in $N$.
+\item \emph{Zone 2}, $t=Ny\in[t_s,t_C]$: exact enclosures of $\Re[\Rh(W+iy)-\Rh(W)]=N\,A(t)+B(t)$ on cells, with the assertion
+$A<-1/(2N_b)$ on every cell. Then $\sqrt N e^{NA+B}$ is non-increasing in $N\ge N_b$.
+\item \emph{Zone 3}, $t\ge t_C$: either $|\Im E_n(\omega q)|\le E_n(|q|)$ and $|e^{a/w}|\le e^{Nav/(v^2+t_C^2)}$, with a negative exponent
+slope below $-3/(2N_b)$; or, if $\inf E>0$, $|\widetilde Q|\le\sum c_re^{-(r-1)v}\cdot2(1/(3rv\inf E)+1)$ and $|\Delta|\le|\widetilde Q|e^{-v}$.
+\item \emph{$\eta$-part}: the integrand of \eqref{eq:signcrit} is $3e^{\Re(\Rh-\Rh(W))-\Re(a/w)}$ relative to $e^{\Rh(W)}$; bounded on the same cells.
+\item \emph{$R(m)$}: Proposition~\ref{prop:reduce} with $W'=tW$ for $t$ in a finite set, using $\log E_n(e^{-W'})\le N\Psi(v')/v'+6|\log(1-e^{-v'})|$
+and $\tilde\mu=-G'(v)$; the exponent slope in $N$ is asserted below $-7/(2N_b)$.
+\end{enumerate}
+The ball passes if $(\text{zone 1}+\text{zone 2}+\text{zone 3}+\eta\text{-part}+R\text{-part})/(\text{window lower bound})<1$, which is
+\eqref{eq:signcrit} for every $(N,m)$ in the ball.
+
+Pairs with $\epsilon>\tilde\mu/0.999$ do not occur (since $m\ge2N$ gives $\tilde\mu\ge\epsilon(1-\frac1{4N})$); such balls are discarded only
+after an enclosure $\tilde\mu\le a/v^2+\max|h'|$ (Cauchy on $|\zeta-v|=v/2$) proves it. Balls with $\tilde\mu>0.0985$ belong to
+\S\ref{sec:centre}.
+
+\begin{certificate}[\texttt{run\_uniform.py}, 36 chunks]\label{cert:grid}
+Every ball of an adaptive covering of $v\in[2.95,3000]$, $\epsilon\in[0,1/733]$ passes; the worst ratio is $0.117$.
+Moreover $-G'(2.95)\ge0.1015$ for all $\epsilon\in[0,1/733]$ and $G''>0$ on every ball, so every saddle with $\tilde\mu<0.0985$ has $v>2.95$.
+\end{certificate}
+
+\begin{proposition}[closing lemma; \texttt{ray\_asymptotic2.py}]\label{prop:closing}
+For $v\ge3000$ and all $N\ge733$, \eqref{eq:signcrit} holds with ratio at most $0.0082$.
+\end{proposition}
+\begin{proof}[Sketch]
+Put $s=\epsilon v^2/a\in(0,1.0011]$. On $|\zeta-v|\le v/2$ one has $|\widetilde S|\le5\cdot10^{-655}$ and $|h(x)|\le4$ for all $\epsilon$
+(for $|x|\ge0.9$ because $|x|/\Re x=|\zeta|/\Re\zeta\le3$), so $|\Delta|\le4\cdot10^{-651}$ and the relative perturbations of the derivatives
+of $G$ from $a/\zeta$ are at most $4.7\cdot10^{-5}$. The window then has $G_3\le0.0388$, $\phi_4\le2\cdot10^{-3}$, $G_5\le10^{-3}$ and
+lower bound $2.494$; the Gaussian tail is at most $0.0205$; for $|t|\ge v/2$ the exponent is at most
+$-\frac{v}{5s}+\log(\frac{4v}{3as}+6)+\frac{20ve^{-v}}{as}$, whose derivative in $s$ is positive on $(0,1.0011]$ (margin $597$), and all
+constants decrease with $v$. All numbers are ball-arithmetic enclosures.
+\end{proof}
+
+%======================================================================
+\section{The centre regime $\mu\ge0.098$}\label{sec:centre}
+%======================================================================
+
+Here $c_n(m)=\frac1{2\pi i}\oint P_n(q)^3q^{-m-1}dq$ is evaluated directly. Put $L(u)=3\sum_{k\le3n,3\nmid k}\log(1-e^{ku})$, $u=\log q$.
+The dominant contributions come from complex saddles $u^*=\frac{2\pi i}{3}+x^*$ and its conjugate, with $L'(u^*)=m$. Write
+$\xi=-N\Re x^*$ and $\eta=N\Im x^*$.
+
+\subsection{Main term and error budget}
+The contour is $|q|=e^{\Re u^*}$. With $A=|L''(u^*)|$, $\sigma=A^{-1/2}$, $b=-\frac12\arg L''(u^*)$, the main term is
+$2\Re\bigl[e^{L(u^*)-mu^*}\,\omega\,ie^{ib}\sqrt{2\pi/A}/(2\pi i)\bigr]$, whose sign is that of $\cos(\text{phase})$ with
+\[
+\text{phase}=\alpha(r)-\tfrac{2\pi}3+b+E_1,\qquad \alpha(r)=\arg P_n(r\omega)^3=-\tfrac\pi6+\arctan\frac{\sqrt3r^{3n}}{2+r^{3n}},
+\]
+where $|E_1|\le\sup|L''|\,\delta^2/2$ and $\delta=\eta/N$ is bounded by Abel summation from $\Im L'=0$. The error relative to the main term is
+$\bigl(2(\text{inner}+\text{middle})+\text{far}\bigr)/(2|\cos\text{phase}|)$, where: \emph{inner} is the Taylor window $|y|\le c\sigma$
+(third-derivative constant $G_3=H_3\sigma^3$, $H_3=\sup_{\text{window}}3\sum k^3|z|(1+|z|)/|1-z|^3$ with $|z|$ and $|1-z|$ enclosed as real balls);
+\emph{middle} is $c\sigma\le|\theta-\theta^*|\le0.05$, bounded in three zones in $t=N(\theta-\frac{2\pi}3)$: $|t|\le0.8$ by the curvature
+$\Re L''\ge N^3\rho_{\rm lo}(t)-3N^2V$, $0.8\le t\le10$ by the linearised continuum profile $-N\int_0^1g(e^{-\xi\tau})(1-\cos\tau t)\,d\tau$ plus a
+Koksma remainder, and $t\ge10$ by the Dirichlet kernel; \emph{far} is $|\theta-\frac{2\pi}3|\ge0.05$, bounded by
+$G\le-\frac32\sum g_k(2\cos k\theta+1)$ with a Koksma profile for $N\theta\le40$ and the Dirichlet kernel beyond.
+
+\subsection{Uniformity in $N$}
+In scaled variables every piece is an explicit function of $(\xi,t,\epsilon)$ whose $N$-dependence is either through
+Koksma/Cauchy remainders of order $1/N$ with the favourable sign, or through factors $N^pe^{-cN}$ with an asserted slope. The tables
+\texttt{midu\_table}, \texttt{g3u\_table}, \texttt{clowu\_table} record upper bounds valid for all $N\ge733$ on $110$ balls covering
+$\xi\in[-0.3,3.4]$; the shift margin for $\eta$ is $0.01$, $0.015$, $0.02$ on $[-0.3,1.75]$, $[1.75,3.05]$, $[3.05,3.4]$ and exceeds the certified
+$|\eta|\le0.0155$.
+
+\begin{certificate}[\texttt{coverage.py}, check E]\label{cert:centre}
+On every one of the $110$ $\xi$-balls the error ratio computed from the tables alone is below $0.4905$, and $\cos(\text{phase})<0$.
+\end{certificate}
+
+\begin{remark}[existence of the saddle]
+For each $N\ge733$ and $\mu\in[0.098,\frac12]$ the saddle $u^*$ exists and is unique in the region $|N\Im(u-\frac{2\pi i}3)|\le0.02$:
+the real equation is solved by monotonicity of $\mu_N(\xi)$, and the imaginary offset by a Newton--Kantorovich step using the tabulated
+lower bound for $\Re L''$ and the window bound for $|L'''|$ (the same constants that bound $\eta$).
+\end{remark}
+
+\begin{lemma}[\texttt{coverage.py}, check F]\label{lem:xirange}
+For all $N\ge733$: $\mu\ge0.098\Rightarrow\xi\le3.4$ and $\mu\le\frac12\Rightarrow\xi\ge-0.3$.
+\end{lemma}
+\begin{proof}
+$\mu_N(\xi)=N^{-2}\Re L'(u^*)$ equals $\int_0^1\tau\sum_j\Re\frac{-z_j}{1-z_j}d\tau$ up to a Koksma error $3\sum_j(\mathrm{TV}_j+S_j)/N$; it is
+decreasing in $\xi$ since $\Re L''>0$. Enclosures give $\mu_N(3.4)\le0.0886$ and $\mu_N(-0.3)\ge0.531$.
+\end{proof}
+
+%======================================================================
+\section{Proof of Theorem~\ref{thm:main}}\label{sec:proofmain}
+%======================================================================
+For $n\le243$ use Certificate~\ref{cert:finite}. Let $n\ge244$ and $m\equiv2$, $m\le\frac92n^2$. If $m<3n$ then $c_n(m)=0$ (all
+exponents of $P_n^3$ below $3n+1$ except $0,1,2,\dots$ come from $P_\infty^3$, whose class-$2$ coefficients vanish). If $3n\le m<6n+2$
+use Proposition~\ref{prop:band}. If $m\ge6n+2=2N$ and $\tilde\mu<0.0985$, the saddle $v$ satisfies $v>2.95$ (Certificate~\ref{cert:grid});
+use Certificate~\ref{cert:grid} for $v\le3000$ and Proposition~\ref{prop:closing} for $v\ge3000$. Otherwise $\tilde\mu\ge0.0985$, so
+$\mu=\tilde\mu+(N+\frac14)/N^2\ge0.098$, and $\mu\le\frac12$; by Lemma~\ref{lem:xirange} the saddle lies in the tabulated range and
+Certificate~\ref{cert:centre} applies. \qed
+
+%======================================================================
+\section{Computations and reproducibility}\label{sec:computations}
+%======================================================================
+All scripts and logs are in the accompanying repository; \texttt{run\_all.sh} regenerates everything from scratch (about two
+hours on one core). Software: Python 3.12, python-flint 0.9.0 (Arb), mpmath 1.3.0, numpy 2.4, GMP 6.3.
+
+\begin{center}\small
+\begin{tabular}{lll}
+\toprule
+script & certifies & result\\
+\midrule
+\texttt{exact/cubic\_check.c} & Cert.~\ref{cert:finite} & all $n\le243$\\
+\texttt{band\_certificate.py} & Cert.~\ref{cert:band} & exact $i\le2000$; tail ratio $<10^{-33}$\\
+\texttt{centre\_*\_uniform*.py} & centre tables & 110 $\xi$-balls\\
+\texttt{run\_uniform.py}, \texttt{B\_uniform.py} & Cert.~\ref{cert:grid} & 36 chunks, 0 unresolved, worst 0.117\\
+\texttt{ray\_asymptotic2.py} & Prop.~\ref{prop:closing} & ratio $\le0.0082$\\
+\texttt{coverage.py} & Cert.~\ref{cert:centre}, Lemma~\ref{lem:xirange}, tiling & COVERAGE COMPLETE\\
+\texttt{poisson\_check.py} & Lemma~\ref{lem:poisson} & $|\eta|\le1.42$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%======================================================================
+\section{Independent checks (not used in the proof)}\label{sec:checks}
+%======================================================================
+\begin{itemize}
+\item \texttt{identity\_check.py}: $c_n(m)=-2(\Im J_0+\Im J_\eta)+R(m)$ with every term computed independently; relative error $\le7\cdot10^{-9}$ ($n=12$)
+and $\le6\cdot10^{-10}$ ($n=20$).
+\item \texttt{expansion\_check.py}: $|\rho(i)|/(\text{bound})\le\sqrt3/2$ for all $i\le3000$ and $3388$ values $i\le108000$, exactly.
+\item \texttt{exact\_accept.py}, \texttt{centre\_accept.py}: exact $c_{244}(m)$ divided by the Laplace, resp.\ centre, main term is
+$0.9934$--$0.9995$, resp.\ $0.9995$.
+\item \texttt{B\_exact.py}: an independent certificate at $n=244$ for $\mu\le0.2$ using the unscaled closed forms (no failures).
+\item \texttt{hand\_checks.py}, \texttt{koksma\_cauchy\_check.py}, \texttt{sz\_expansion\_audit.py}: symbolic check of the midpoint Peano kernel,
+randomised checks of the Cauchy and Koksma inequalities, numerical audit of every constant in Appendix~\ref{app:expansion}.
+\end{itemize}
+
+%======================================================================
+\appendix
+\section{The explicit expansion of $p_3$}\label{app:expansion}
+%======================================================================
+Put $G(\tau)=\prod_{3\nmid m}(1-e^{2\pi im\tau})$, so $p_3(i)=[e^{2\pi i i\tau}]G^3$. With $f(x)=\prod_{m\ge1}(1-x^m)^{-1}$ and the
+eta transformation, for $\tau=\frac hk+\frac{iz}{k^2}$, $\Re z>0$, $d=\gcd(3,k)$ and $hh'\equiv-1\pmod k$:
+\[
+G(\tau)^3=\Bigl(\frac3d\Bigr)^{3/2}e^{i\theta_{h,k}}\exp\Bigl(\frac{3\pi(d^2-3)}{36z}-\frac{\pi z}{2k^2}\Bigr)\widehat G^3,\qquad
+\widehat G=\frac{f(e^{2\pi idh'_d/k-2\pi d^2/(3z)})}{f(e^{2\pi ih'/k-2\pi/z})},
+\]
+with a real $\theta_{h,k}$.
+\begin{enumerate}
+\item If $3\mid k$ ($d=3$) the exponential is $e^{\pi/(2z)}$ (so $B=\frac12$) and $\widehat G^3=1+\sum_{j\ge1}\varphi_je^{-2\pi jw}$-type with
+majorant $f(t)^3f(t^3)^3$, $t=e^{-2\pi\Re(1/z)}$. The correction term would grow only if $3>24/(3-1)=12$; it does not.
+\item If $3\nmid k$ the exponential decays and $|G^3|\le K_3^3$ on $\Re(1/z)\ge1$, $K_3=\sqrt3e^{-\pi/18}f(e^{-2\pi/3})f(e^{-2\pi})=1.691256$
+(the maximum is at $\Re(1/z)=1$).
+\end{enumerate}
+Dissect $[0,1)$ by Ford circles of order $N\ge\sqrt{4\pi i}+1$ and map each to the circle $K:|z-\frac12|=\frac12$. On the chords and the
+connecting arcs $|e^{\pi(2i-\frac12)z/k^2}|\le e$. For $3\mid k$, complete the main integral to all of $K$: $\frac i{k^2}\int_K
+e^{\pi B/z+\pi(2i-B)z/k^2}dz=\cP_k(i)$, at the cost of the two arcs, each of length $\le\frac\pi2\sqrt2k/(N+1)$; move the remainder to the
+chord, where the majorant is non-increasing in $\Re(1/z)$ because $B\le2$. For $3\nmid k$ move to the chord and use $K_3^3$. Counting
+$\sum_{3\mid k\le N}\varphi(k)/k\le\frac29(N+1)$ (as $\varphi(3j)/3j\le\frac23$) and $\sum_{k\le N}\varphi(k)/k\le N$ gives
+$|\rho(i)|-\sum_{3\mid k\ge6}\varphi(k)\cP_k\le E_{\rm arc}+E_{\rm rem}+E_{\rm ng}$ with
+\[
+E_{\rm arc}=\sqrt2\pi\tfrac29e^{1+\pi/2}=12.9103,\quad
+E_{\rm rem}=2\sqrt2\tfrac29e^{1+\pi/2}\bigl(f(t)^3f(t^3)^3-1\bigr)=0.0463,\quad
+E_{\rm ng}=2\sqrt2\,e\,K_3^3=37.1935,
+\]
+$t=e^{-2\pi}$, total $50.1501$. The $k=3$ amplitude is $\sqrt3\chi(i)$, obtained from the Dedekind-sum phases and confirmed exactly
+for $i\le108000$ (\S\ref{sec:checks}).
+
+\section{Auxiliary inequalities}\label{app:aux}
+(i) \emph{Cauchy}: if $f$ is holomorphic on $|\zeta-c|\le\rho$ with $|f-f(c)|\le M$ on the boundary, then $|f^{(k)}(p)|\le k!M\rho/(\rho-d)^{k+1}$
+for $|p-c|\le d<\rho$. (ii) \emph{Midpoint}: $|g(0)-\int_{-1/2}^{1/2}g|\le\frac18\int|g''|$ (Peano kernel $(\frac12-|t|)^2/2$).
+(iii) \emph{Koksma}: one node per cell of width $h$ gives $|h\sum f(x_i)-\int f|\le h\,\mathrm{TV}(f)+(\text{uncovered length})\sup|f|$.
+(iv) \emph{Envelopes}: $\sqrt{2\pi x}e^{-x}I_\nu(x)$ is increasing to $1$ for $\nu\ge\frac12$.
+
+\begin{thebibliography}{9}
+\bibitem{Andrews1995} G.~E. Andrews, \emph{On a conjecture of Peter Borwein}, J. Symbolic Comput. \textbf{20} (1995), 487--501.
+\bibitem{BBG} J.~M. Borwein, P.~B. Borwein and F.~G. Garvan, \emph{Some cubic modular identities of Ramanujan}, Trans. Amer. Math. Soc. \textbf{343} (1994), 35--47.
+\bibitem{Arb} F.~Johansson, \emph{Arb: efficient arbitrary-precision midpoint-radius interval arithmetic}, IEEE Trans. Comput. \textbf{66} (2017), 1281--1292.
+\bibitem{KW} C.~Krattenthaler and C.~Wang, \emph{An asymptotic approach to Borwein-type sign pattern theorems}, arXiv:2201.12415.
+\bibitem{Wang2022} C.~Wang, \emph{An analytic proof of the Borwein Conjecture}, Adv. Math. \textbf{394} (2022), Paper No.~108028.
+\end{thebibliography}
+\end{document}

@@ -1,0 +1,2 @@
+y0=688.288  kappa2=0.997278  ratio at i=36000 <= [4.18172968041e-139 +/- 5.96e-151]
+BAND TAIL: g(i) < 0 for all i >= 36000 (bound decreasing in y for y >= 9)

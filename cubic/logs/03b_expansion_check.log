@@ -1,0 +1,2 @@
+b done 125s
+checked 3388 values of i in [2990, 108000]: max |rest|/bound = 0.8660  (788s)

@@ -1,0 +1,5 @@
+h=1 sign=+1: CERTIFIED  boxes=5140 worst V(N0)=-2.49 max K=5563.5  (14s)
+h=1 sign=-1: CERTIFIED  boxes=5140 worst V(N0)=-2.27 max K=5563.5  (29s)
+h=2 sign=+1: CERTIFIED  boxes=5140 worst V(N0)=-2.55 max K=5564.3  (43s)
+h=2 sign=-1: CERTIFIED  boxes=5140 worst V(N0)=-2.18 max K=5564.3  (57s)
+N0=821 YE=6.00: piece (E) CERTIFIED for all n >= N0

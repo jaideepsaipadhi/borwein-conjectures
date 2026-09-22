@@ -1,0 +1,2 @@
+sum|rho| <= 0.2842
+max |eps| over boxes Re w in (0,10], |Im w|<=pi: <= 1.420

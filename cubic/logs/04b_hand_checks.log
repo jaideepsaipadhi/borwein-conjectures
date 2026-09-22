@@ -1,0 +1,11 @@
+H2 Peano identity residual: 0  sup K = 1/8
+  m=400 -2 Im: rel diff 0.941
+  m=400 +2 Im: rel diff 1.06
+  m=600 -2 Im: rel diff 1.12
+  m=600 +2 Im: rel diff 0.884
+  m=800 -2 Im: rel diff 5.69e-48
+  m=800 +2 Im: rel diff 2.0
+  m=899 -2 Im: rel diff 8.85e-48
+  m=899 +2 Im: rel diff 2.0
+  w=(0.05 + 0.0j) |eps| = 0.2672
+  w=(0.05 + 1.0j) |eps| = 0.2764

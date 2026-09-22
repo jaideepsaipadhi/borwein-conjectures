@@ -1,0 +1,11 @@
+1. growth exponent at p|k: pi*delta*(d^2-p)/(12 p z), d=3 -> 0.5 = B = 0.5  (a = pi^2 B^2 *4/... gives a_3 = pi^2/9 OK)
+2. correction term grows iff delta > 24/(p-1) = 12.0 -> not extracted for delta=3
+3. max_{N<=2e5} sum_{3|k<=N} phi(k)/k / (N+1) = 0.16667  <=  (p-1)/p^2 = 0.22222
+   (proof: phi(3j)/(3j) <= 2/3 and there are N/3 multiples of 3)
+4. on paths |e^{pi C z/k^2}| <= e^{2 pi C/(N+1)^2} <= e^{4 pi n /(4 pi n)} = e   (N+1 >= sqrt(4 pi n))
+5. remainder terms non-increasing in w: B = 0.5 <= 2
+6. E_arc=12.910261 E_rem=0.0463044 K_3=1.691256 E_ng=37.193543  E_con=50.150108
+7. non-growing chord count factor <= 2 sqrt2 (sum phi(k)/k <= N)
+   w=1: bound factor 1.691256
+   w=1.5: bound factor 1.3961472
+   w=3: bound factor 1.0279639

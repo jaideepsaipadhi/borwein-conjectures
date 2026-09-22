@@ -1,0 +1,1069 @@
+%=====================================================================
+\section{The Third Borwein conjecture}\label{sec:third}
+%=====================================================================
+
+In this section $p=5$, $\delta=1$, $P_n=P_{5,n}=(q;q)_{5n}/(q^5;q^5)_n$, $c_n(m)=c(m)=[q^m]P_n$, $\deg P_n=10n^2$,
+$N=5n+1$, $a_5=2\pi^2/75$, $\omega_5=e^{2\pi i/5}$, $s(i)=[q^i]G_5$, $E_n=\prod_{k>5n,\,5\nmid k}(1-q^k)^{-1}$, $\lambda=m/N$
+and $\mu=m/(10n^2)$. The amplitude of the $k=5$ main term is
+\[
+\fa(i)=2\cos(2\pi i/5+\pi/5)+2\cos(4\pi i/5)=\tfrac{5+\sqrt5}2,\ -\sqrt5,\ -\tfrac{5-\sqrt5}2,\ 0,\ 0\qquad(i\equiv0,1,2,3,4).
+\]
+It vanishes on the thin classes $3,4$ of Lemma~\ref{lem:vanish}(b). In the classes $0,1,2$, $s(m)$ has the non-vanishing
+main term $\fa(m)\cP_5(m)$ (Theorem~\ref{thm:G5}).
+
+\begin{theorem}\label{thm:third-main}
+For every $n\ge1$ and every $m$, $c_n(m)\ge0$ if $5\mid m$ and $c_n(m)\le0$ otherwise. That is, the Third Borwein
+conjecture holds.
+\end{theorem}
+
+Labels. Each step below is of one of the following kinds: a complete written argument; an inequality verified in ball
+arithmetic over its whole parameter range (``certified''; a \emph{Certificate} line names the program and log); a
+verification by exact integer arithmetic (``exact''); or a standard fact (Appendix~\ref{app:facts}).
+
+\subsection{Statement, reduction and regions}\label{sec:t-reduction}
+
+By Lemma~\ref{lem:palin} it suffices to prove the sign pattern for $0\le m\le5n^2$, that is, for $0\le\mu\le\frac12$. The
+three analytic regions are
+\begin{itemize}
+\item \textbf{band:} $\lambda<4$ (that is, $m<4N$);
+\item \textbf{Laplace region:} $\lambda\ge4$ and $\mu<0.105$;
+\item \textbf{centre:} $\mu\ge0.105$.
+\end{itemize}
+Their union is $\{0\le m\le5n^2\}$ trivially. Table~\ref{tab:regions5} summarises the covering;
+Theorem~\ref{thm:t-coverage} checks that each region's certificate covers the whole of its region for $n\ge980$.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{llll}
+\toprule
+region & classes & method & where\\
+\midrule
+$n\le979$ & all & exact integer computation & \S\ref{sec:t-exact}\\
+$\lambda<4$ & $3,4$ & one-part block, exact to $n\le2000$, majorant $\Psi$ beyond & \S\ref{sec:t-band34}\\
+$\lambda<4$ & $0,1,2$ & exact to $n\le2000$, per-$m$ inequality beyond & \S\ref{sec:t-band012}\\
+$\lambda\ge4$, $\mu<0.105$ & $0,1,2$ & saddle point, $V\in[2,12]$ tiles and tail cell & \S\ref{sec:lap012}\\
+$\lambda\ge4$, $\mu<0.105$ & $3,4$ & re-centred (thin) saddle, tiles and tail cell & \S\ref{sec:lap34}\\
+$\mu\ge0.105$ & all & near-peak Laplace, off-peak lemma, combination & \S\ref{sec:t-centre}\\
+\bottomrule
+\end{tabular}
+\caption{The covering for $p=5$ (for $n\ge980$ in the analytic regions).}
+\label{tab:regions5}
+\end{table}
+
+By Lemma~\ref{lem:factor}, $e(j)$ counts the partitions of $j$ into parts $>5n$ that are not divisible by $5$; for $j<4N$
+at most three parts fit.
+
+\begin{remark}[cusp by cusp]
+In the expansion of \S\ref{sec:G5}, the $k=10$ and $k=15$ amplitudes also vanish on $i\equiv3,4\pmod 5$, to $390$ or more
+digits (\texttt{cusp10.py}, \texttt{cusp15b.py}). This is not used in the proof.
+\end{remark}
+
+%---------------------------------------------------------------------
+\subsection{The expansion of \texorpdfstring{$G_5$}{G5}}\label{sec:G5}
+%---------------------------------------------------------------------
+
+\emph{Notation for this subsection only.} The coefficient index is written $\nu$, and $i=\sqrt{-1}$. $N$ is the Farey
+order, not $5n+1$. $e(x)=e^{2\pi ix}$; $f(x)=F(x)=1/(x;x)_\infty$; $s(h,k)=\sum_{r=1}^{k-1}\frac rk\big(\big(\frac{hr}k\big)\big)$
+is the Dedekind sum, and $\omega(h,k)=e^{\pi is(h,k)}$; $t_0=e^{-2\pi}$.
+
+\subsubsection{Statement}
+Put $B=1/3$, $C=C(\nu)=2\nu-1/3$, $K(\nu)=\lfloor\sqrt{4\pi\nu}\rfloor+2$,
+$\cP_k(\nu)=\frac{2\pi}k\sqrt{B/C}\,I_1\big(\frac{2\pi}k\sqrt{BC}\big)$ and $\fa(\nu)=\sum_{h=1}^4w_h\omega_5^{-\nu h}$,
+where $w_h=e^{-\pi is(h,5)}$.
+
+\begin{theorem}[explicit expansion of $G_5$]\label{thm:G5}
+For every $\nu\ge1$,
+\[
+\big|s(\nu)-\fa(\nu)\cP_5(\nu)\big|\le\sum_{5\mid k,\ 10\le k\le K(\nu)}\varphi(k)\cP_k(\nu)+E_{\rm arc}+E_{\rm rem}+E_{\rm ng},
+\]
+where
+\begin{itemize}
+\item $E_{\rm arc}=\sqrt2\pi\cdot\frac4{25}e^{1+\pi/3}\le 5.506447$;
+\item $E_{\rm rem}=2\sqrt2\cdot\frac4{25}e^{1+\pi/3}\big(f(t_0)f(t_0^5)-1\big)\le0.006571$, with $t_0=e^{-2\pi}$;
+\item $E_{\rm ng}=2\sqrt2\,e\,K_5\le 21.950524$, with $K_5=\sqrt5e^{-\pi/15}f(e^{-2\pi/5})f(e^{-2\pi})\le2.8549955$.
+\end{itemize}
+Their sum is $\Econ\le 27.463542\le27.4636$.
+\end{theorem}
+
+Every $\cP_k(\nu)$ is positive: $C\ge5/3$, and $I_1>0$ on $(0,\infty)$. By \S\ref{sec:G5-constants},
+$s(1,5)=1/5$, $s(2,5)=s(3,5)=0$ and $s(4,5)=-1/5$. So $w_1=e^{-\pi i/5}$, $w_2=w_3=1$, $w_4=e^{\pi i/5}$, and
+$\fa(\nu)=2\cos(2\pi\nu/5+\pi/5)+2\cos(4\pi\nu/5)$, as above.
+
+\subsubsection{Farey order}
+Take $N=K(\nu)$. Two properties are used.
+\begin{itemize}
+\item \textbf{(N1)} $N\ge5$ for all $\nu\ge1$, since $\sqrt{4\pi}>3$. So the denominator $k=5$ always occurs. (The choice
+$N=K(\nu)-1$ fails at $\nu=1$: it gives $N=4$.)
+\item \textbf{(N2)} $N+1=\lfloor\sqrt{4\pi\nu}\rfloor+3>\sqrt{4\pi\nu}$. Hence $2\pi C/(N+1)^2=(4\pi\nu-2\pi/3)/(N+1)^2<1$.
+\end{itemize}
+
+\subsubsection{The Rademacher path}
+
+\begin{lemma}[Farey dissection; Fact~\ref{fact:farey}]\label{lem:farey}
+Take the Farey fractions of order $N$ cyclically on $[0,1)$, and let $h_1/k_1<h/k<h_2/k_2$ be neighbours. Let $C(h/k)$ be
+the Ford circle with centre $h/k+i/(2k^2)$ and radius $1/(2k^2)$, and let $\gamma_{h,k}$ be its upper arc between its
+tangency points with $C(h_1/k_1)$ and $C(h_2/k_2)$. Then these arcs join into a path from $\tau_0$ to $\tau_0+1$ in $\HH$,
+and $s(\nu)=\int_{\tau_0}^{\tau_0+1}G_5(e(\tau))e(-\nu\tau)\,d\tau$, taken over a horizontal segment, may be deformed onto
+this path by Cauchy's theorem. The integrand is holomorphic on $\HH$ and $1$-periodic.
+\end{lemma}
+
+The substitution $\tau=h/k+iz/k^2$ maps $C(h/k)$ onto $K:\ |z-\tfrac12|=\tfrac12$. Also $d\tau=(i/k^2)dz$ and
+$e(-\nu\tau)=e(-\nu h/k)e^{2\pi\nu z/k^2}$. This gives
+\begin{equation}\label{eq:G5-dissection}
+s(\nu)=\sum_{k\le N}\ \sum_{\substack{0\le h<k\\(h,k)=1}}\frac i{k^2}e(-\nu h/k)\int_{z'}^{z''}G_5\big(e(h/k+iz/k^2)\big)e^{2\pi\nu z/k^2}dz,
+\end{equation}
+with $z'=(k^2+ikk_1)/(k^2+k_1^2)$ and $z''=(k^2-ikk_2)/(k^2+k_2^2)$. The integral runs clockwise along $K$ from $z'$
+($\Im>0$) through $z=1$ to $z''$ ($\Im<0$). The tangency point of $C(h/k)$ with $C(h_1/k_1)$ is
+$h/k-k_1/(k(k^2+k_1^2))+i/(k^2+k_1^2)$, and it maps to $z'$; the same holds for $z''$.
+
+\emph{The arc of $0/1$.} In the cyclic dissection of $[0,1)$, the circle $C(0/1)$ contributes two pieces: the arc from
+$\tau_0=i$ to its tangency with $C(1/N)$, and the arc of $C(1/1)=C(0/1)+1$ from its tangency with $C((N-1)/N)$ to
+$\tau_0+1=i+1$. The integrand $G_5(e(\tau))e(-\nu\tau)$ is $1$-periodic. Translate the second piece by $-1$: it becomes the
+arc of $C(0/1)$ from the tangency with $C(-1/N)$ to $i$. The two pieces then join into a single arc of $C(0/1)$, from the
+tangency with $C(-1/N)$ through $i$ to the tangency with $C(1/N)$. In the $z$-variable ($h=0$, $k=1$, $\tau=iz$), this is
+the arc of $K$ from $z'$ (with $k_1=N$) through $z=1$ (that is, $\tau=i$) to $z''$ (with $k_2=N$). So the term $h/k=0/1$
+in~\eqref{eq:G5-dissection} is one Rademacher arc like every other, and Lemma~\ref{lem:G5-geometry} applies to it with
+$k_1=k_2=N$. (These neighbours satisfy $k+k_j=N+1$.)
+
+\begin{lemma}[geometry]\label{lem:G5-geometry}
+\begin{itemize}
+\item[(b)] $|z'|,|z''|\le\sqrt2k/(N+1)$, and $\Re z',\Re z''\le2k^2/(N+1)^2$.
+\item[(c)] On the chord $s_{h,k}=[z',z'']$: $\Re(1/z)\ge1$, and $0<\Re z\le 2k^2/(N+1)^2$. Also
+$|s_{h,k}|\le2\sqrt2k/(N+1)$.
+\item[(d)] On the arcs of $K$ from $z''$ to $0$ and from $0$ to $z'$ (the complement of the Rademacher arc):
+$\Re(1/z)=1$ and $\Re z\le2k^2/(N+1)^2$. Each of these arcs has length at most $(\pi/2)\sqrt2k/(N+1)$.
+\end{itemize}
+\end{lemma}
+\begin{proof}
+(b) Farey neighbours satisfy $k+k_j\ge N+1$ (Fact~\ref{fact:neighbours}). So $k^2+k_j^2\ge(N+1)^2/2$. Therefore
+$|z'|=k/\sqrt{k^2+k_1^2}\le\sqrt2k/(N+1)$ and $\Re z'=k^2/(k^2+k_1^2)\le2k^2/(N+1)^2$. The same holds for $z''$.
+
+(c) The map $z\mapsto1/z$ sends $K\setminus\{0\}$ onto the line $\Re w=1$, and the open disc onto $\Re w>1$. The chord lies
+in the closed disc and avoids $0$. $\Re z$ is affine on the chord and positive at both ends. Finally,
+$|s_{h,k}|\le|z'|+|z''|$.
+
+(d) $\Re(1/z)=1$ on $K\setminus\{0\}$. Let $\theta\in(0,\pi]$ be the central angle of the arc from $z'$ to $0$. Its chord
+has length $|z'|=\sin(\theta/2)$ and its arc length is $\theta/2\le(\pi/2)\sin(\theta/2)$, by Jordan's inequality. On a
+semicircle, $\Re z=(1+\cos\psi)/2$ is monotone, so $\Re z\le\Re z'$ on this arc. The arc from $z''$ is handled the same
+way.
+\end{proof}
+
+\begin{corollary}\label{cor:G5-exp}
+On every chord and every arc in Lemma~\ref{lem:G5-geometry}(d), $|e^{\pi Cz/k^2}|\le e^{2\pi C/(N+1)^2}<e$.
+\end{corollary}
+\begin{proof}
+Lemma~\ref{lem:G5-geometry} and (N2).
+\end{proof}
+
+\begin{remark}[the regions of deformation]\label{rem:G5-deform}
+Two facts about the region $\Delta_{h,k}$ bounded by the Rademacher arc $z'\to1\to z''$ and the chord $s_{h,k}$ are used
+below.
+\begin{itemize}
+\item \emph{$\Delta_{h,k}$ lies in the half-plane $\Re z\ge\min(\Re z',\Re z'')>0$.} On each of the two semicircular pieces
+of the arc, $\Re z$ is monotone, with its maximum at $z=1$. So on the arc, $\Re z\ge\min(\Re z',\Re z'')$. On the chord
+this holds by affinity. The region $\Delta_{h,k}$ is a circular segment, which is the convex hull of the arc, so it lies in
+that half-plane as well.
+\item \emph{The integrands are holomorphic on $\Delta_{h,k}$.} In particular $\Delta_{h,k}$ avoids $z=0$. For $\Re z>0$,
+$\tau=h/k+iz/k^2$ has $\Im\tau=\Re z/k^2>0$, so $G_5(e(\tau))$ and the functions derived from it in
+\S\ref{sec:G5-transform} are holomorphic there.
+\end{itemize}
+Cauchy's theorem therefore allows every integral over a Rademacher arc to be replaced by the integral over its chord.
+This is used in \S\ref{sec:G5-rem} and \S\ref{sec:G5-ng} alike.
+\end{remark}
+
+\subsubsection{The modular transformation at a cusp}\label{sec:G5-transform}
+
+\begin{fact}[Fact~\ref{fact:eta}]\label{fact:G5-eta}
+Let $k\ge1$, $(h,k)=1$, $\Re z>0$, and $hH\equiv-1\pmod k$. Put $x=\exp(2\pi ih/k-2\pi z/k^2)$ and
+$x'=\exp(2\pi iH/k-2\pi/z)$. Then
+\[
+F(x)=\omega(h,k)(z/k)^{1/2}\exp\Big(\frac\pi{12z}-\frac{\pi z}{12k^2}\Big)F(x'),
+\]
+with the principal square root. Equivalently,
+$(x;x)_\infty=\omega(h,k)^{-1}(z/k)^{-1/2}\exp(-\frac\pi{12z}+\frac{\pi z}{12k^2})(x';x')_\infty$.
+\end{fact}
+
+Let $x=e(\tau)$ with $\tau=h/k+iz/k^2$. Then $G_5(x)=(x;x)_\infty F(x^5)$.
+
+\emph{Case $5\mid k$ (growing cusps), $k=5k_1$.} Write $x^5=\exp(2\pi ih/k_1-2\pi z_1/k_1^2)$ with $z_1=z/5$, and apply
+Fact~\ref{fact:G5-eta} to $(h,k_1,z_1)$. Then
+\begin{equation}\label{eq:G5-grow}
+G_5(x)=\Phi_{h,k}\exp\Big(\frac\pi{3z}-\frac{\pi z}{3k^2}\Big)\hat G_{h,k}(z),
+\end{equation}
+where $\Phi_{h,k}=\omega(h,k_1)/\omega(h,k)$ is unimodular and $\hat G_{h,k}=(x';x')_\infty F(x_5')$, with
+$x_5'=\exp(2\pi iH_1/k_1-10\pi/z)$. The square roots cancel exactly, because $(z_1/k_1)^{1/2}=(z/k)^{1/2}$ is the same
+principal root; so no branch choice enters. For the exponents: $-\frac\pi{12z}+\frac{5\pi}{12z}=\frac\pi{3z}$ and
+$\frac{\pi z}{12k^2}-\frac{5\pi z}{12k^2}=-\frac{\pi z}{3k^2}$. For $k=5$: $\Phi_{h,5}=w_h$.
+
+\emph{Case $5\nmid k$ (non-growing cusps).} Apply Fact~\ref{fact:G5-eta} to $(5h,k,5z)$ with $5hH_5\equiv-1\pmod k$. Then
+\begin{equation}\label{eq:G5-ng}
+G_5(x)=\Phi'_{h,k}\sqrt5\exp\Big(-\frac\pi{15z}-\frac{\pi z}{3k^2}\Big)(x';x')_\infty F(x_5''),\qquad
+x_5''=\exp(2\pi iH_5/k-2\pi/(5z)),
+\end{equation}
+with $|\Phi'_{h,k}|=1$. Here $(z/k)^{-1/2}(5z/k)^{1/2}=\sqrt5$, because $z$ and $5z$ have the same argument.
+
+\emph{The shift in $C$.} In~\eqref{eq:G5-dissection}, the factor $e^{-\pi z/(3k^2)}$ combines with $e^{2\pi\nu z/k^2}$ to
+give $e^{\pi Cz/k^2}$, where $C=2\nu-1/3$.
+
+Formulae~\eqref{eq:G5-grow} and~\eqref{eq:G5-ng} were checked against direct $q$-series, phases included: $8$ cusps at $60$
+digits (relative error $\le4\cdot10^{-60}$), and independently by the referee of this section at $10$ cusps and two values
+of $z$ (relative error $\le4.6\cdot10^{-49}$).
+
+\emph{Majorant of $\hat G$.} Put $u=e^{-2\pi/z}$ and $w=\Re(1/z)$. Expanding $(x';x')_\infty=\prod(1-e(mH/k)u^m)$ and
+$F(x_5')=\prod(1-e(mH_1/k_1)u^{5m})^{-1}$ gives $\hat G=1+\sum_{j\ge1}g_ju^j$. Coefficientwise,
+$|g_j|\le[y^j]\prod(1+y^m)f(y^5)\le[y^j]f(y)f(y^5)=:\phi_j$, because distinct partitions are partitions. Hence
+\begin{equation}\label{eq:G5-maj}
+|\hat G-1|\le\sum_{j\ge1}\phi_je^{-2\pi jw}.
+\end{equation}
+
+\subsubsection{Growing cusps: main term}
+By~\eqref{eq:G5-dissection} and~\eqref{eq:G5-grow}, the cusp $h/k$ with $5\mid k$ contributes
+$\frac i{k^2}e(-\nu h/k)\Phi_{h,k}[M_{h,k}+R_{h,k}]$, where
+\[
+M_{h,k}=\int_{z'}^{z''}e^{\pi/(3z)+\pi Cz/k^2}dz,\qquad R_{h,k}=\int_{z'}^{z''}e^{\pi/(3z)+\pi Cz/k^2}(\hat G_{h,k}-1)\,dz.
+\]
+
+\begin{fact}[Bessel integral; Fact~\ref{fact:bessel-int}]\label{fact:G5-bessel}
+For $x>0$ and $c>0$, $I_1(x)=\frac{x/2}{2\pi i}\int_{c-i\infty}^{c+i\infty}e^{s+x^2/(4s)}s^{-2}\,ds$.
+\end{fact}
+
+\emph{From the Hankel loop to the vertical line.} DLMF 10.9.19 \cite{DLMF} gives
+$I_1(x)=\frac{x/2}{2\pi i}\int_{-\infty}^{(0+)}e^{s+x^2/(4s)}s^{-2}\,ds$, over a Hankel loop that starts and ends at
+$-\infty$ and encircles the negative real axis. For integer order the only singularity of the integrand is the essential
+singularity at $s=0$; the loop has no branch cut to respect. Fix $R>c$ and close the region between the loop and the line
+$\Re s=c$ with the two arcs $\Gamma_R^\pm$ of $|s|=R$ in $\{\Re s\le c\}$, running from $c\pm i\sqrt{R^2-c^2}$ to the loop.
+The region enclosed contains no singularity, so by Cauchy's theorem the loop integral equals the line integral truncated at
+height $\sqrt{R^2-c^2}$, plus the integrals over $\Gamma_R^\pm$ (and minus the loop's own parts beyond $|s|=R$). On
+$\Gamma_R^\pm$: $|e^s|\le e^c$; $|e^{x^2/(4s)}|\le e^{x^2/(4R)}\le e^{x^2/(4c)}$; $|s^{-2}|=R^{-2}$; the total length is at
+most $2\pi R$. So the arcs contribute $O(R^{-1})\to0$. The loop's parts beyond $|s|=R$ vanish too, since $e^s$ decays
+along the negative axis. The line integral converges absolutely, because the integrand is $O(|s|^{-2})$ on it. Letting
+$R\to\infty$ proves Fact~\ref{fact:G5-bessel}.
+
+\begin{lemma}\label{lem:bessel-contour}
+Let $K$ be oriented clockwise, $B>0$, $C>0$. Then $\frac i{k^2}\oint_Ke^{\pi B/z+\pi Cz/k^2}dz=\cP_k$.
+\end{lemma}
+\begin{proof}
+Put $w=1/z=1+i\rho$, $\rho\in\R$. The clockwise traversal of $K\setminus\{0\}$ corresponds to $\rho$ running from $-\infty$
+to $\infty$. With $dz=-dw/w^2$, the integral becomes $-\int_{1-i\infty}^{1+i\infty}e^{\pi Bw+\pi C/(k^2w)}w^{-2}dw$.
+Substituting $s=\pi Bw$ gives $-\pi B\int e^{s+x^2/(4s)}s^{-2}ds$, with $x=2\pi\sqrt{BC}/k$. By
+Fact~\ref{fact:G5-bessel} this equals $-\pi B\cdot 2\pi i\cdot(2/x)I_1(x)$. Multiplying by $i/k^2$ gives
+$4\pi^2BI_1(x)/(k^2x)=\cP_k$.
+\end{proof}
+Numerical check at $k=10$, $\nu=7$: $0.08174002496770177$ on both sides; the referee's check agrees to $30$ digits.
+(Lemma~\ref{lem:bessel-contour} is also the identity used for $p=3$ in \S\ref{sec:expansion3}, with $B=\frac12$.)
+
+\emph{Completing the arc.} On $K\setminus\{0\}$ the integrand of $M_{h,k}$ has modulus $e^{\pi/3}|e^{\pi Cz/k^2}|$, which
+is bounded, so $\oint_K$ converges absolutely. The complement of the Rademacher arc is the arc $z''\to0\to z'$. By
+Lemma~\ref{lem:G5-geometry}(d) and Corollary~\ref{cor:G5-exp}, the integrand there is at most $e^{1+\pi/3}$, and the total
+length is at most $\pi\sqrt2k/(N+1)$. Hence
+\begin{equation}\label{eq:G5-main}
+\frac i{k^2}M_{h,k}=\cP_k(\nu)+\rho_{h,k},\qquad|\rho_{h,k}|\le\frac{\pi\sqrt2e^{1+\pi/3}}{k(N+1)}.
+\end{equation}
+
+\emph{Amplitudes.} Put $\fa_k(\nu)=\sum_{(h,k)=1}\Phi_{h,k}e(-\nu h/k)$ for $5\mid k$. This is a sum of $\varphi(k)$
+unimodular terms, so $|\fa_k|\le\varphi(k)$, and $\fa_5=\fa$.
+
+\subsubsection{Growing cusps: remainder}\label{sec:G5-rem}
+By Remark~\ref{rem:G5-deform}, $R_{h,k}$ may be taken along the chord, where $w\ge1$. By~\eqref{eq:G5-maj},
+$|e^{\pi/(3z)}(\hat G-1)|\le\sum_{j\ge1}\phi_je^{(\pi/3-2\pi j)w}$. Each exponent is negative, so each term decreases in
+$w$; this is where $B=1/3<2$ is used. The sum is therefore at most its value at $w=1$, namely
+$e^{\pi/3}(f(t_0)f(t_0^5)-1)$. With the chord length and Corollary~\ref{cor:G5-exp},
+\begin{equation}\label{eq:G5-rem}
+\Big|\frac i{k^2}R_{h,k}\Big|\le\frac1{k^2}\cdot\frac{2\sqrt2k}{N+1}e^{1+\pi/3}\big(f(t_0)f(t_0^5)-1\big).
+\end{equation}
+The $j=1$ term decays, so no correction term needs to be extracted.
+
+\subsubsection{Non-growing cusps}\label{sec:G5-ng}
+Here $5\nmid k$. By Remark~\ref{rem:G5-deform} the integral may be moved to the chord. By~\eqref{eq:G5-ng}, for $w\ge1$ on
+the chord: $|(x';x')_\infty|\le f(e^{-2\pi w})\le f(e^{-2\pi})$; $|F(x_5'')|\le f(e^{-2\pi w/5})\le f(e^{-2\pi/5})$;
+$e^{-\pi w/15}\le e^{-\pi/15}$. Each bound is non-increasing in $w$. With Corollary~\ref{cor:G5-exp}, the integrand is at
+most $K_5e$, so each such cusp contributes at most
+\begin{equation}\label{eq:G5-ngb}
+\frac1{k^2}\cdot\frac{2\sqrt2k}{N+1}\cdot eK_5 .
+\end{equation}
+
+\subsubsection{Assembly}
+By~\eqref{eq:G5-dissection} and~\eqref{eq:G5-main}--\eqref{eq:G5-ngb},
+$s(\nu)-\fa(\nu)\cP_5(\nu)-\sum_{5\mid k,\,10\le k\le N}\fa_k\cP_k=E(\nu)$, where
+\[
+|E(\nu)|\le\sum_{5\mid k\le N}\frac{\varphi(k)\big[\pi\sqrt2+2\sqrt2(f(t_0)f(t_0^5)-1)\big]e^{1+\pi/3}}{k(N+1)}
++\sum_{5\nmid k\le N}\frac{\varphi(k)\,2\sqrt2eK_5}{k(N+1)}.
+\]
+For $5\mid k$: $\varphi(k)/k\le4/5$, and there are at most $N/5$ such $k$, so the first weight sum is less than $4/25$. For
+$5\nmid k$: $\varphi(k)/k\le1$, and there are at most $N$ values of $k$, so the second weight sum is less than $1$. This
+gives $|E|\le E_{\rm arc}+E_{\rm rem}+E_{\rm ng}$. Using $|\fa_k|\le\varphi(k)$ and $N=K(\nu)$ proves
+Theorem~\ref{thm:G5}. \qed
+
+\subsubsection{Constants}\label{sec:G5-constants}
+Computed at $60$ digits and independently at $50$ digits by the referee:
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+constant & value & rounded up\\
+\midrule
+$K_5$ & $2.85499540499087\ldots$ & $2.8549955$\\
+$E_{\rm arc}$ & $5.50644686778894\ldots$ & $5.506447$\\
+$E_{\rm rem}$ & $0.00657086323166\ldots$ & $0.006571$\\
+$E_{\rm ng}$ & $21.9505238422352\ldots$ & $21.950524$\\
+$\Econ$ & $27.4635415732558\ldots$ & $27.4636$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The Dedekind sums $s(1,5)=\tfrac15$, $s(2,5)=s(3,5)=0$ and $s(4,5)=-\tfrac15$ were checked at $60$ digits.
+
+\subsubsection{Numerical confirmation and tightness (not used in the proof)}
+The referee checked Theorem~\ref{thm:G5} exhaustively over $\nu\in[1,5000]$ and at $1509$ further $\nu\le200000$: no
+violation, maximum LHS/RHS $0.9045085$. An earlier ball-arithmetic survey covered every $\nu\le60000$ and every $7$th
+$\nu\le200000$ with no failures. The ratio tends to $(5+\sqrt5)/8=0.9045085$ in the class $\nu\equiv2\pmod 5$, where
+$|\fa_{10}|=(5+\sqrt5)/2$ is set against $\varphi(10)=4$; so the $\sum\varphi(k)\cP_k$ term must not be weakened in any
+later use.
+
+\emph{Uses of Theorem~\ref{thm:G5}.} Write $R(i)$ for its right-hand side. The certificates use
+$|s(i)-\fa(i)\cP_5(i)|\le R(i)$ for every $i\ge1$, and exact values of $s(i)$ for $i\le200000$ (\texttt{g5\_coef.py}
+$\to$ \texttt{g5\_coeffs.pkl}, cross-checked by an independent recomputation in \texttt{bandfix\_coeffs.py}).
+
+%---------------------------------------------------------------------
+\subsection{Exact computation}\label{sec:t-exact}
+%---------------------------------------------------------------------
+
+\begin{theorem}[exact]\label{thm:t-exact}
+The conjecture holds, for every coefficient and in every class, for all $n\le 979$.
+\end{theorem}
+\begin{proof}[Method]
+The script works modulo $x^{5N_B^2+1}$ and builds $P_{N_A}$ from $P_0=1$. It obtains each next $P_n$ by four exact
+shift-subtracts $P\leftarrow P-x^kP$, for $k=5n+1,\dots,5n+4$ with $5\nmid k$. Truncation is exact, because each factor
+feeds only higher degrees. It then checks every coefficient with $0\le m\le5n^2$, in every class; a strict wrong sign
+counts as a violation, zeros are allowed. The range is run in the segments $1$--$150$, $150$--$291$, $291$--$410$,
+$410$--$580$, $580$--$820$, $820$--$920$ and $920$--$1000$, all with $0$ violations; the last run was killed for lack of
+memory after the lines $n=920,\dots,979$, all with \texttt{wrong\_sign=0}. The segments abut or overlap, so the exact range
+is $1\le n\le979$. Zeros occur only at $m\lesssim5n$, i.e.\ $\mu<2\cdot10^{-3}$, inside the band, where the conjectured
+signs are non-strict. Palindromy (Lemma~\ref{lem:palin}) extends each check from $m\le5n^2$ to all $m$.
+\cert{centre3\_exact.py N\_A N\_B}{third/logs/exact\_1\_150.log, exact\_150\_291.log, centre3\_exact\_*.log}
+\end{proof}
+
+\emph{Further exact checks (used in \S\ref{sec:t-band}).}
+\begin{itemize}
+\item Every class and every $m<4N$, for every $n\in[291,2000]$. The method is $c_n=G_5E_n\bmod q^{4N}$ with
+$6E_n=6+6p_1+3(p_1^2+p_1(q^2))+(p_1^3+3p_1(q^2)p_1+2p_1(q^3))$ (the cycle index of $S_2$ and $S_3$), where
+$p_1=\sum_{N\le k<4N,\,5\nmid k}q^k$, computed with \texttt{fmpz\_poly.mul\_low}. The script was validated against the full
+product for $n\le14$, and it reports zero sign failures. An audit recomputed $16$ values of $n$ in $[291,2000]$ by a direct
+product that does not use $E_n$ or the coefficient table, with identical results for all $m<4N$.
+\cert{bandfix\_exact.py 291 2000}{third/logs/bandfix\_exact.log}
+\item The coefficients $s(i)$ for $i\le200000$ come from \texttt{g5\_coef.py} (pentagonal series times $p(k)$ at $q^5$).
+They were recomputed independently.
+\cert{bandfix\_coeffs.py}{third/logs/bandfix\_coeffs.log}
+\end{itemize}
+
+\begin{remark}
+The analytic certificates below hold from $n\ge821$ (Laplace classes $3$--$4$ and the centre) or from $n\ge291$ (Laplace
+classes $0$--$2$). The overlap with the exact range is therefore $821\le n\le979$. From here on, $n\ge980$.
+\end{remark}
+
+%---------------------------------------------------------------------
+\subsection{The band, \texorpdfstring{$\lambda<4$}{lambda < 4}}\label{sec:t-band}
+%---------------------------------------------------------------------
+
+Every part of $E_n$ is $\ge N$. So for $m<4N$ at most three parts contribute, and $c(m)=s(m)+b_1+b_2+b_3$, where $b_j$
+collects the $j$-part terms. For $j\in[N,2N)$, $e(j)=1$ if $5\nmid j$ and $e(j)=0$ otherwise.
+
+\subsubsection{Classes 3 and 4}\label{sec:t-band34}
+
+\emph{One-part block.} Let $m\equiv3$ or $4\pmod 5$ and write $m=5M+r$. Then $s(m)=0$, and
+$b_1=\sum_{j\in[N,m],\,5\nmid j}s(m-j)=\sum_{i\le m-N,\ i\not\equiv m}s(i)$. Since $s(i)=0$ for $i\equiv3,4$, only
+$i\equiv0,1,2$ survive. Also $m-N=5(M-n)+r-1$ with $r-1\in\{2,3\}$, so every block $\{5t,5t+1,5t+2\}$ with $t\le T:=M-n$
+is included in full. Hence
+\[
+b_1=G(T)=\sum_{t\le T}g(t),\qquad g(t)=s(5t)+s(5t+1)+s(5t+2).
+\]
+
+\begin{lemma}\label{lem:t-L1}
+The main term satisfies $\mathrm{main}(g(t))\le-5\cP_5'(5t)$. Moreover $g(t)<-4\cP_5'(5t)<0$ for $t\ge200$.
+\end{lemma}
+\begin{proof}
+The main term of $g(t)$ is $\fa(0)\cP_5(5t)+\fa(1)\cP_5(5t+1)+\fa(2)\cP_5(5t+2)$. Since $\fa(0)=|\fa(1)|+|\fa(2)|$, this
+equals $-|\fa(1)|\,[\cP_5(5t+1)-\cP_5(5t)]-|\fa(2)|\,[\cP_5(5t+2)-\cP_5(5t)]$. By the series of $I_1$,
+$\cP_5(i)=\sum_{r\ge1}a_5^r x^{r-1}/(r!\,(r-1)!)$ is a power series with positive coefficients in $x=i-\tfrac16$ (not in
+$i$ itself). So $\cP_5'$ is increasing for $x>0$, and the main term is at most
+$-(|\fa(1)|+2|\fa(2)|)\cP_5'(5t)=-5\cP_5'(5t)$.
+
+By Theorem~\ref{thm:G5}, $|g(t)-\mathrm{main}|\le3R_{\rm grp}(5t+2)$, where $R_{\rm grp}$ is the (increasing) right-hand
+side of Theorem~\ref{thm:G5}. Lemma~L1 states $3R_{\rm grp}(X+2)\le0.018\,\cP_5'(X)$ for all $X\ge1000$. Its proof has four
+steps:
+\begin{enumerate}
+\item write $\cP_5'(X)=4a_5^2I_2(Y)/Y^2$ with $Y=2\sqrt{a_5(X-1/6)}$;
+\item use $I_2\ge I_{5/2}$ (monotonicity in the order, Fact~\ref{fact:bessel}) and the closed form of $I_{5/2}$, which give
+$I_2(Y)\ge e^Y(1-3/Y-2e^{-2Y})/\sqrt{2\pi Y}$;
+\item use $I_1\le I_{1/2}$, $\cP_k\le\cP_{10}$ for $k\ge10$, and $\sum_{5\mid k\le K}\varphi(k)\le K^2/10+K/2$;
+\item bound the ratio by $c_1X^{3/2}e^{-Y/2}+c_2Y^{5/2}e^{-Y}$. Both terms decrease for $X\ge1000$ (sign of the
+log-derivative), so the bound evaluated at $X=1000$ in Arb holds for all larger $X$: the log prints
+\texttt{L1: sup\_\{X>=1000\} 3 Rgrp(X+2)/P5'(X) <= [0.017972 +/- 1.12e-7]}.
+\end{enumerate}
+This gives $g(t)\le-5\cP_5'+0.018\cP_5'<-4\cP_5'$ for $5t\ge1000$.
+\cert{bandfix\_analytic.py 10001}{third/logs/bandfix\_analytic.log}
+\end{proof}
+
+\begin{lemma}[exact]\label{lem:t-block-exact}
+For $t\le39999$, $g(t)<0$ except at $g(1)=1$ and $g(5)=0$. Every partial sum satisfies $G(T)\le0$, with equality only at
+$T=1$. The computation uses the table of exact $s(i)$, which the same script recomputes independently first.
+\cert{bandfix\_coeffs.py}{third/logs/bandfix\_coeffs.log}
+\end{lemma}
+
+\begin{corollary}\label{cor:t-block}
+$G(T)\le0$ for every $T$, and $G(T)\le g(T)<0$ for $T\ge200$. Hence, for classes $3$ and $4$ and every $n$: for $m<N$,
+$c(m)=s(m)=0$; for $N\le m<2N$, $c(m)=G(T)\le0$.
+\end{corollary}
+
+\emph{The range $2N\le m<4N$.}
+\begin{itemize}
+\item \emph{For $980\le n\le2000$ (exact):} by the exact band run, which covers $291\le n\le2000$. Over that whole run the
+log prints the largest ratio $|b_2+b_3|/|b_1|$ as \texttt{0.0001}, at $n=291$, $m=5819$; an audit's rerun gives the
+unrounded value $1.1302\cdot10^{-4}$.
+\item \emph{For $n>2000$ (so $N\ge10001$).} Write $I=m-2N$. Then $5T\ge I+N-3$.
+\begin{itemize}
+\item \emph{Denominator.} $|b_1|\ge|g(T)|\ge4\cP_5'(I+N-3)$, by Corollary~\ref{cor:t-block} and the monotonicity of
+$\cP_5'$.
+\item \emph{Numerator.} $|b_2|+|b_3|\le\sum_{d\le I}w(2N+d)|s(I-d)|$. Here the number of pairs is at most $d/2+1$, and the
+number of triples at $3N+e$ is at most $(e+3)^2/12+1/2$. Also $|s(i)|\le e^{2\sqrt{a_5i}}$: this is exact for $i\le200000$,
+and beyond that Theorem~\ref{thm:G5} gives the stronger constant $7.7\cdot10^{-5}$.
+\item \emph{Split.} Split the sum at $D=\lfloor3\sqrt{2N/a_5}\log N\rfloor$. The exponent
+$2\sqrt{a_5}(\sqrt I-\sqrt{I+N-19/6})$ increases in $I$, so it is largest at $I=2N$. This gives
+\[
+\frac{|b_2|+|b_3|}{|b_1|}\le\Psi(N)=C_\Psi\,N^{9/4}(\log N)^2e^{-2\sqrt{a_5}(\sqrt3-\sqrt2)\sqrt N}.
+\]
+\item \emph{Conclusion.} $d\log\Psi/dN<0$ exactly when $(c_c/2)\sqrt N>9/4+2/\log N$, where
+$c_c=2\sqrt{a_5}(\sqrt3-\sqrt2)$ and $c_c/2=0.16304$. This first holds at $N=257$ and persists for larger $N$, so $\Psi$ is
+decreasing for $N\ge257$. In Arb, $\Psi(10001)\le0.19769$. Hence $c(m)\le b_1(1-0.1977)<0$.
+\end{itemize}
+\cert{bandfix\_analytic.py 10001}{third/logs/bandfix\_analytic.log}
+\end{itemize}
+
+\begin{corollary}\label{cor:t-band34}
+For classes $3$ and $4$, every $n\ge980$ and every $m<4N$: $c(m)\le0$.
+\end{corollary}
+
+\subsubsection{Classes 0, 1, 2}\label{sec:t-band012}
+For $980\le n\le2000$ the band is covered by the exact run. For $n>2000$ write $c(m)=s(m)+\sum_{j\ge N}e(j)s(m-j)$. The
+weights satisfy $e(j)\le1$ for $j<2N$ and $e(j)\le1+(N+1)+((N+3)^2/12+1/2)\le N^2\le m^2$ for $j<4N$. With
+$A(I)=\sum_{i\le I}|s(i)|$, this gives
+\[
+|c(m)-s(m)|\le A(m-N)+m^2A(m-2N)\le A(m-N_{\min})+m^2A(m-2N_{\min}),
+\]
+where $N_{\min}(m)=\max(10001,\lfloor m/4\rfloor+1)$.
+The second inequality uses that $A$ is non-decreasing and that $m<4N$ is equivalent to $N\ge\lfloor m/4\rfloor+1$. So one
+inequality per $m$ covers every $n>2000$ at once.
+
+\begin{lemma}\label{lem:t-band012}
+\begin{enumerate}
+\item[(A)] (\emph{exact}, $m\le200000$.) $\sgn s(m)=\sgn\fa(m)$ and $|s(m)|>A(m-N_{\min})+m^2A(m-2N_{\min})$ for every $m$
+in classes $0,1,2$, except $s(7)=0$. That coefficient has $m<N$, so $c(7)=0$, which is allowed. The worst ratio is
+$5.06\cdot10^{-10}$.
+\item[(B)] (\emph{certified}, $m>200000$.) With the inputs $|s(i)|\le e^{c\sqrt i}$ ($c=2\sqrt{a_5}$),
+$\sum_{i\le I}e^{c\sqrt i}\le e^{c\sqrt I}(1+2\sqrt I/c)$, $\cP_5(m)\ge h_0m^{-3/4}e^{c\sqrt m}$ (via $I_1\ge I_{3/2}$) and
+$R(m)\le1.3\,m\,e^{c\sqrt m/2}+\Econ$, one has
+$[\text{corrections}+R(m)]/((5-\sqrt5)/2\cdot \cP_5(m))\le Q\le5.14\cdot10^{-20}$. Each term has the form
+$C'm^{p'}e^{-\kappa\sqrt m}$ with $p'\in\{1.25,3.25,1.75,0.75\}$, and is decreasing once $\sqrt m>2p'/\kappa$.
+\end{enumerate}
+\cert{cls012\_band.py}{third/logs/cls012\_band.log}
+\end{lemma}
+
+\begin{corollary}\label{cor:t-band012}
+For classes $0,1,2$, every $n\ge980$ and every $m<4N$, $c(m)$ has the conjectured sign.
+\end{corollary}
+
+%---------------------------------------------------------------------
+\subsection{The Laplace region, \texorpdfstring{$\lambda\ge4$, $\mu<0.105$}{lambda >= 4, mu < 0.105}}\label{sec:t-laplace}
+%---------------------------------------------------------------------
+
+Both certificates of this subsection share one exact representation (\S\ref{sec:t-repr}) and one Euler--Maclaurin lemma
+(\S\ref{sec:t-em}). They differ in the saddle, because classes $3$ and $4$ are thin. Write $\vp_\eta=1+i\eta$.
+
+\subsubsection{Exact Bessel--Laplace representation}\label{sec:t-repr}
+Write $\fa(i)=\sum_{h=1}^4A_h\omega_5^{hi}$ with $A_1=e^{i\pi/5}$, $A_4=e^{-i\pi/5}$ and $A_2=A_3=1$. By
+Lemma~\ref{lem:factor} and Theorem~\ref{thm:G5},
+\[
+c(m)=e(m)+\sum_hA_h\omega_5^{hm}J_h+\rho,\qquad J_h=\sum_{j<m}e(j)\omega_5^{-hj}\cP_5(m-j),\qquad|\rho|\le\sum_{j<m}e(j)R(m-j).
+\]
+Here $e(m)=e(m)s(0)$ is the $j=m$ term, and $\omega_5^{-hj}\omega_5^{hm}=\omega_5^{h(m-j)}$ reproduces $\fa(m-j)$.
+
+For $x=i-1/6>0$ we have $\cP_5(i)=\sqrt{a_5/x}\,I_1(2\sqrt{a_5x})$, which is the inverse Laplace transform of
+$e^{a_5/u}-1$. Put $r_1(u)=e^{a_5/u}-1-a_5/u=O(|u|^{-2})$. Then
+$\frac1{2\pi i}\int_{(W)}r_1(u)e^{xu}du=\cP_5-a_5$ for $x>0$ and $=0$ for $x<0$. Since $r_1=O(|u|^{-2})$, Fubini applies,
+and for every $W>0$, exactly,
+\[
+J_h=a_5H_h+K_h,\qquad H_h=\sum_{j\le m-1}e(j)\omega_5^{-hj},
+\]
+\[
+K_h=\frac1{2\pi}\int_{\R}r_1(W+iy)\,e^{(m-1/6)(W+iy)}E_n(\omega_5^{-h}e^{-W-iy})\,dy.
+\]
+
+\subsubsection{Euler--Maclaurin lemma for the twisted \texorpdfstring{$E_n$}{En}}\label{sec:t-em}
+
+\begin{lemma}\label{lem:t-em}
+Let $\theta\in(0,1)$, and let $f$ be such that $f,f'\to0$ at $\infty$ and $f''$ is integrable. Then
+\[
+\sum_{t\ge n}f(t+\theta)=\int_n^\infty f-B_1(\theta)f(n)+R,\qquad|R|\le\tfrac1{12}\Big(|f'(n)|+\int_n^\infty|f''|\Big).
+\]
+\end{lemma}
+\begin{proof}
+On each unit interval $[t,t+1]$, write $f(t+\theta)-\int_t^{t+1}f=\int_t^{t+1}k(x-t)f'(x)\,dx$, where $k(x)=x-H(x-\theta)$
+and $H$ is the Heaviside function. The mean of $k$ is $B_1(\theta)$, and $k-B_1(\theta)=\tilde B_1(x-\theta)$. The mean
+part telescopes to $-B_1(\theta)f(n)$. Integrate the remaining part by parts once more, with kernel
+$P(x)=(\tilde B_2(x-\theta)-B_2(\theta))/2$. Its constant part contributes $(B_2(\theta)/2)f'(n)$, with
+$|B_2(c/5)|/2\le 11/300<1/12$. Its periodic part is bounded by $\sup|\tilde B_2|/2=1/12$ times $\int|f''|$.
+\end{proof}
+The constant part must be split off: without the split, $\sup|P|$ reaches $0.12>1/12$ at $\theta=2/5$.
+
+\emph{Application.} Write $k=5t+c$ with $c\in\{1,2,3,4\}$. Put $\Phi_c(s)=\log(1-\omega_5^{-hc}e^{-s})$, $u=W\vp_\eta$,
+$\sigma=5nu$, $V=5nW$ and $\xi=e^{-V}$. Apply Lemma~\ref{lem:t-em} to $f(t)=\Phi_c(5ut)$ with $\theta=c/5$, and sum over
+$c$. This gives
+\[
+\log E_n(\omega_5^{-h}e^{-u})=-\gamma(\sigma)/u+\Omega_h(\sigma)+R_h,
+\]
+where $\gamma(z)=\big[\Li_2(e^{-z})-\Li_2(e^{-5z})/5\big]/5$;
+$Q(s)=\sum_c\Phi_c(s)=\log(1-e^{-5s})-\log(1-e^{-s})$, independent of $h$ because
+$\prod_c(1-\omega_5^{-hc}w)=(1-w^5)/(1-w)$; $\Omega_h(\sigma)=\sum_cB_1(c/5)\Phi_c(\sigma)$; and
+\[
+|R_h|\le\bar R:=(5W/3)|\vp_\eta|\xi\big[1/(1-\xi)+|\vp_\eta|/(1-\xi)^2\big].
+\]
+\emph{Derivation of $\bar R$.} Here $f(t)=\Phi_c(5ut)$, so $f'=5u\,\Phi_c'$ and $f''=25u^2\Phi_c''$, with
+$|u|=W|\vp_\eta|$ and $\Re(5ut)=5Wt$. From $\Phi_c'(s)=\omega_5^{-hc}e^{-s}/(1-\omega_5^{-hc}e^{-s})$,
+$\Phi_c''(s)=-\omega_5^{-hc}e^{-s}/(1-\omega_5^{-hc}e^{-s})^2$ and $|1-\omega_5^{-hc}e^{-s}|\ge1-e^{-\Re s}$ we get
+$|\Phi_c'(s)|\le e^{-\Re s}/(1-e^{-\Re s})$, so $|f'(n)|\le5W|\vp_\eta|\,\xi/(1-\xi)$ since $\Re(5un)=V$; and
+$|\Phi_c''(s)|\le e^{-\Re s}/(1-e^{-\Re s})^2$, so, as the denominator is at least $(1-\xi)^2$ for $t\ge n$,
+\[
+\int_n^\infty|f''|\,dt\le\frac{25W^2|\vp_\eta|^2}{(1-\xi)^2}\int_n^\infty e^{-5Wt}dt=\frac{5W|\vp_\eta|^2\xi}{(1-\xi)^2}.
+\]
+Lemma~\ref{lem:t-em} gives $\tfrac1{12}(|f'(n)|+\int|f''|)$ for each $c$; summing over the four values of $c$ gives $\bar R$.
+
+The pairs $c\leftrightarrow5-c$ have opposite $B_1$ and conjugate roots of unity, so $\Re\Omega_h(W)=0$, i.e.\
+$|e^{\Omega_h(W)}|=1$. Also $|\Omega_h|\le\bar\omega:=0.8\,\Li_1(\xi)$, since $\sum_c|B_1(c/5)|=0.8$. (In
+\texttt{cls012\_em\_check.py} and \texttt{lap34\_emchk.py} the bound exceeds the true remainder by a factor $5$--$20$.)
+
+\subsubsection{Classes 0, 1, 2}\label{sec:lap012}
+
+\emph{Saddle.} Define $\alpha(V)=a_5-\gamma(V)-VQ(V)/5$ and choose $W$ by $(m-1/6)W^2=\alpha(V)$, where $V=5nW$. With
+$X=1/W$ the exponent becomes
+\[
+\frac{a_5}u+(m-\tfrac16)u-\frac{\gamma(\sigma)}u=X\,\Xi_V(\eta),\qquad\Xi_V(\eta)=\frac{a_5-\gamma(V\vp_\eta)}{\vp_\eta}+\alpha(V)\vp_\eta .
+\]
+$\Xi_V$ depends on $V$ only. It satisfies $\Xi_V'(0)=0$ identically (this is the definition of $\alpha$), and
+$\Xi(-\eta)=\overline{\Xi(\eta)}$. Put $\Xi_2=-\Xi''(0)>0$ and $\Amp=W^{3/2}e^{X\Xi(0)}/\sqrt{2\pi\Xi_2}$. Then
+\[
+c(m)=\Amp\Big[M+\sum_hA_h\omega_5^{hm}e^{\Omega_h}\delta_h\Big]+E_2',\qquad
+M=\sum_hA_h\omega_5^{h\cdot\mathrm{cls}}e^{\Omega_h(W)}\in\R .
+\]
+As $V\to\infty$, $M\to\fa(\mathrm{cls})$. $M$ is the main term with the correct normalisation $|E_n(\omega_5e^{-W})|$.
+
+\emph{Error terms.} All are relative to $\Amp$, and each is either independent of $X$ or non-increasing in $X$. Set
+$\eta_0=c_c'/\sqrt{X\Xi_2}$ with $c_c'=4$, and $s=\eta\sqrt{X\Xi_2}$.
+\begin{itemize}
+\item \emph{Window, $|\eta|\le\eta_0$.} Write $\psi=X(ic_3\eta^3+R_4)+\Delta\Omega+R_h$. The cubic term is a pure phase, so
+$|e^\psi-1|\le\min(k_3s^3,2)e^r+e^r-1$ with $r=k_4s^4+k_1s+\bar R$, where $k_3=|c_3|/(\Xi_2^{3/2}\sqrt X)$,
+$k_4=\sup|\Xi''''|/(24\Xi_2^2X)$ and $k_1=\beta_1/\sqrt{X\Xi_2}$. Here $\beta_1=0.8V\xi/(1-\xi)$ bounds $|d\Omega/d\eta|$.
+The supremum of $|\Xi''''|$ is enclosed on sub-balls of width $0.01$ covering $[0,\eta_0(X_{\min})]$. The Gaussian
+truncation contributes $\erfc(c_c'/\sqrt2)$.
+\item \emph{Mid region, $\eta_0<|\eta|\le2$.} $D(\eta)=\Re(\Xi(0)-\Xi(\eta))\ge d_k\eta^2$ on $170$ fixed $\eta$-tiles,
+using the better of the Taylor bound $\Xi_2/2-\sup|\Xi''''|\eta^2/24$ and a direct ball evaluation. The contribution is
+$e^{2\bar\omega+\bar R}\sum_k\sqrt{\Xi_2/(2d_k)}\,\erfc\big(\max(c_c'\sqrt{d_k/\Xi_2},\ \eta_k\sqrt{X_{\min}d_k})\big)$.
+\item \emph{Crude terms $E_2$.} These are: the $(1+a_5/u)$ part of $r_1$; $|y|\in[2W,1]$, with
+$|r_1|\le e^{a_5X/(1+\eta_1^2)}+1+a_5X/\eta_1$; $|y|>1$, with $|r_1|\le(a_5^2/2y^2)e^{a_5}$; $e(m)\le e^{mW}E_n(e^{-W})$;
+$a_5|H_h|\le a_5e^{(m-1)W}E_n(e^{-W})$; and the $\rho$-term, by Rankin's trick at the same $W$, with
+$\cP_k(i)\le W(e^{a_kX}-1)e^{(i-1/6)W}$ and $k\le K(m)$.
+\end{itemize}
+
+\emph{The $\rho$-term in detail.} By \S\ref{sec:t-repr}, $|\rho|\le\sum_{j<m}e(j)R(m-j)$, where
+$R(i)=\sum_{5\mid k,\,10\le k\le K(i)}\varphi(k)\cP_k(i)+\Econ$. Every $i=m-j$ here is $\ge1$, so Theorem~\ref{thm:G5}
+applies. Write $x=i-\tfrac16$ and $a_k=2\pi^2/(3k^2)$, so that $a_{10}=a_5/4$ and $a_k\le a_5/9$ for $k\ge15$.
+\begin{itemize}
+\item \emph{Bessel part.} The series of $I_1$ gives $\cP_k(i)=\sum_{r\ge1}a_k^rx^{r-1}/(r!(r-1)!)$. With
+$x^{r-1}/(r-1)!\le e^{xW}/W^{r-1}$ this gives $\cP_k(i)\le W(e^{a_kX}-1)e^{(i-1/6)W}$.
+\item \emph{Counting.} $\varphi(10)=4$, and $\sum_{j=3}^{K/5}\varphi(5j)\le\sum4j\le2\bar K(\bar K+1)$, where
+$\bar K=K/5$ and $K$ bounds $K(i)$ for every $i\le m$. The code uses $K=\sqrt{4\pi(a_5X^2+1)}+2$, since
+$m-\tfrac16=\alpha X^2\le a_5X^2$.
+\item \emph{Rankin.} Since $e(j)\ge0$, $\sum_{j<m}e(j)e^{(m-j-1/6)W}\le e^{(m-1/6)W}E_n(e^{-W})$. So the Bessel part
+contributes at most $W\big[4e^{a_5X/4}+2\bar K(\bar K+1)e^{a_5X/9}\big]e^{(m-1/6)W}E_n(e^{-W})$.
+\item \emph{$\Econ$ part.} $e^{(m-j)W}\ge1$ for $j\le m$, so
+$\sum_{j<m}e(j)\Econ\le \Econ e^{mW}E_n(e^{-W})=\Econ e^{W/6}\cdot e^{(m-1/6)W}E_n(e^{-W})$.
+\end{itemize}
+Together these give the term
+$T_\rho=F_m e^{W/6}\big(W[4e^{a_5X/4}+e^{a_5X/9}2\bar K(\bar K+1)]+\Econ\big)$, where $F_m$ is an upper bound for
+$e^{(m-1/6)W}E_n(e^{-W})/\Amp$. The script also applies the factor $e^{W/6}$ to the Bessel part, where it is not needed;
+this only enlarges the bound.
+
+All the crude terms use $E_n(e^{-W})\le\exp(0.8X\Li_2(\xi)+4\Li_1(\xi))$, which holds because $E_n$ has non-negative
+coefficients, so $|E_n(\omega_5^{-h}e^{-u})|\le E_n(e^{-W})$. The total is at most $\sqrt{2\pi\Xi_2}X^{3/2}e^{-cX}\mathrm{poly}(X)$,
+with $c\ge\kappa-a_5/4$ and $\kappa=a_5-\gamma-0.8\Li_2(\xi)$; the rate $a_5/4$ comes from the $k=10$ Rankin term. The
+script asserts $c>0$ and $X_{\min}>4.5/c$, and $E_2\le2.3\cdot10^{-10}$.
+
+\emph{Certified condition.} $\sgn(\fa)M-4\epsilon_{\rm tot}-E_2>0$, where
+$\epsilon_{\rm tot}=\varepsilon_{\rm win}+\erfc(c_c'/\sqrt2)+\varepsilon_{\rm mid}$ (called \texttt{delta} in the log).
+Each factor $A_h\omega_5^{hm}e^{\Omega_h(W)}$ is unimodular, because $\Re\Omega_h(W)=0$, and $|\delta_h|\le\epsilon_{\rm tot}$.
+So the bracket is $M$ plus at most $4\epsilon_{\rm tot}$, and the condition implies that $c(m)$ has the sign of
+$\fa(\mathrm{cls})$.
+
+\emph{Range of $X$.} $X=5n/V\ge1455/V$ for $n\ge291$. $\lambda\ge4$ gives $\alpha X^2\ge4VX+23/6$, so $X\ge4V/a_5$. Per
+tile, $X_{\min}=\max(1455/V_{hi},4V_{lo}/a_5)$.
+
+\emph{Monotonicity in $X$.} $k_3,k_1\propto X^{-1/2}$ and $k_4\propto X^{-1}$; $\bar R\propto W$; the erfc arguments are
+non-decreasing in $X$; the window sets are taken at $\eta_0(X_{\min})$; the crude terms decay. So one evaluation at
+$X_{\min}$ per tile covers every $X\ge X_{\min}$, that is, every $(n,m)$ whose saddle lies in the tile. No monotonicity in
+$\lambda$ is used.
+
+\begin{lemma}[classes $0$--$2$, tiles]\label{lem:lap012-tiles}
+On $500$ contiguous tiles of width $0.02$ covering $V\in[2,12]$ (the last tile snapped to $[11.98,12]$), the certified
+condition holds, with $0$ failures. The minimum margins $\sgn(\fa)M-4\epsilon_{\rm tot}-E_2$ are $3.0700$ (class $0$,
+$|\fa|=3.618$), $1.6879$ (class $1$, $|\fa|=2.236$) and $0.8339$ (class $2$, $|\fa|=1.382$). The worst $\epsilon_{\rm tot}$ is
+$0.137$, at $V=9.78$, $X_{\min}=148.6$.
+\cert{cls012\_lap.py 2.0 12.0 0.02}{third/logs/cls012\_lap\_rerun.log (line 1)}
+\end{lemma}
+
+\emph{Tail cell $V\ge11.99$.} Write $\Xi=a_5/\vp_\eta+a_5\vp_\eta+\Delta$. On the strip $|\Im\eta|\le1/2$ we have
+$\Re\vp_\eta\ge1/2$, so $|\gamma(V\vp_\eta)/\vp_\eta|\le\frac{12}{25}\Li_2(e^{-V/2})$. Cauchy estimates on discs of radius
+$1/2$ give $\Xi_2\in2a_5\pm8\varepsilon$, $|c_3|\le a_5+8\varepsilon$ and $|\Xi''''|\le24a_5+384\varepsilon$. The
+mid-region bound is $a_5\eta^2/(1+\eta^2)-\frac{12}{25}\Li_2$. Also $M\ge|\fa|-4(e^{\bar\omega}-1)$ and
+$X\ge4V/a_5\ge4V_T/a_5$. Every $V$-dependent quantity moves in the safe direction as $V$ grows, so a single evaluation at
+$V_T$ covers all $V\ge V_T$.
+
+\begin{lemma}[classes $0$--$2$, tail cell]\label{lem:lap012-tail}
+For all $V\ge V_T=11.99$ the certified condition holds, with margins $3.0950$, $1.7130$, $0.8589$ (classes $0,1,2$) and
+$X_{\min}=182.2$. The cell overlaps the last tile on $[11.99,12]$, so coverage at $V=12$ does not depend on the snap.
+\cert{cls012\_lap.py tail 11.99}{third/logs/cls012\_lap\_rerun.log (line 2)}
+\end{lemma}
+
+\emph{Validation (not part of the proof).} \texttt{cls012\_asym\_check.py}: $c/(\Amp\cdot M)=0.990$--$0.998$ at
+$n=60,100$. An audit checked $45$ exact points, $n\in\{291,437,500,700,1500,2500\}$, $V=2.08$--$40$, including
+$\lambda\approx4$ and $\mu\approx0.105$: every sign correct; $|c/\Amp-M|$ ranged over $0.0005$--$0.0185$, against a
+certified bound of $0.27$--$0.54$.
+
+\subsubsection{Classes 3 and 4: the re-centred (thin) saddle}\label{sec:lap34}
+
+For classes $3$ and $4$, $\sum_hA_h\omega_5^{h\cdot\mathrm{cls}}=\fa(\mathrm{cls})=0$, so the constant term of the twisted sum
+cancels. The survivor carries $e^{-5nu}=e^{-\sigma}$, which is an $O(N)$ term \emph{in the exponent}. It must not be
+treated as an amplitude (see Appendix~\ref{app:withdrawn}); here it is moved into the exponent.
+
+\emph{The thin function.} Put
+\[
+g(s)=e^{s}\sum_{h=1}^4A_h\omega_5^{h\cdot\mathrm{cls}}\exp(\Omega_h(s)),\qquad s=\sigma=V\vp_\eta .
+\]
+Since $\omega_5^{hm}=\omega_5^{h\cdot\mathrm{cls}}$, we have $\sum_hA_h\omega_5^{hm}e^{\Omega_h(\sigma)}=e^{-\sigma}g(\sigma)$ exactly.
+
+\begin{lemma}[the thin function]\label{lem:thin}
+\begin{enumerate}
+\item \emph{Leading coefficient.} Expand $e^{\Omega_h}=1+\Omega_h+\dots$. The constant term cancels. The coefficient of
+$e^{-s}$ is $f_\infty=-\sum_hA_h\omega_5^{h\cdot\mathrm{cls}}\sum_cB_1(c/5)\omega_5^{-hc}=-1$ exactly, for both classes
+(checked in Arb to $10^{-37}$, \texttt{lap34\_lib.finf}).
+\item \emph{Uniform bound.} For every $s$ with $\Re s=V$,
+$|g(s)-f_\infty|\le\varepsilon_g(V):=4e^V\big[0.8(\Li_1(\xi)-\xi)+\bar\omega^2e^{\bar\omega}/2\big]$. This follows from
+$|\Omega_h-\Omega_h^{(1)}|\le0.8\sum_{r\ge2}\xi^r/r$ and $|e^\Omega-1-\Omega|\le|\Omega|^2e^{|\Omega|}/2$, where
+$\Omega_h^{(1)}$ is the first-order term. $\varepsilon_g$ is $\xi^{-1}$ times a series in $\xi$ with non-negative
+coefficients starting at $\xi^2$, so it decreases in $V$. For example $\varepsilon_g(11.99)=1.787\cdot10^{-5}$.
+\item \emph{Reality.} $g(V)$ is real for real $V$, because $h\leftrightarrow5-h$ are conjugate. The Arb enclosures of $g$ on
+the $V$-tiles lie in $[-1.13,-0.96]$.
+\end{enumerate}
+\end{lemma}
+(An audit tested (2) at $6000$ points and found $\max|g+1|/\varepsilon_g=0.233$.)
+
+\emph{Saddle.} Choose $W$ by $\alpha(V)X^2=m-\tfrac16-5n$. The exponent $a_5/u-\gamma/u+(m-1/6)u-5nu$ then equals
+$X\Xi_V(\eta)$, with the same $\Xi_V$ as in \S\ref{sec:lap012}. So
+\[
+c(m)=\Amp\,[g(V)+\Delta],\qquad \Amp=W^{3/2}e^{X\Xi_V(0)}/\sqrt{2\pi\Xi_2}>0,
+\]
+and the certificate proves $|\Delta|<-g(V)$, which gives $c(m)<0$. All the $O(N)$ parts of $\log F_m$ are inside $X\Xi_V$:
+the kernel, the twisted-product term $-\gamma/u$, and the thin shift $-5nu$. The remaining $\log g(V\vp_\eta)$ is $O(1)$.
+It is kept out of the Gaussian and paid for in the window error through $\sup|g'|$.
+
+\emph{Error terms} (relative to $\Amp$, all non-increasing in $X$).
+\begin{itemize}
+\item \emph{Window.} With $G(\eta)=e^{V\vp_\eta}\sum_hA_h\omega_5^{hm}e^{\Omega_h+R_h}$, $\psi=X(c_3\eta^3+R_4)$ and $c_3$
+purely imaginary,
+\[
+|e^\psi G-g(V)|\le e^{k_4s^4}(V|\eta|\sup_{\rm win}|g'|+\varepsilon_R)+|g(V)|\big(\min(k_3s^3,2)e^{k_4s^4}+e^{k_4s^4}-1\big).
+\]
+Here $\varepsilon_R=4e^{\bar\omega}e^V(e^{\bar R}-1)\ge|G-g(V\vp_\eta)|$; $\sup|g'|$ is the smaller of a ball evaluation
+(sub-balls of width at most $0.05$ in $\Im s$) and the Cauchy bound $\varepsilon_g(V-1)$; the integral is an upper Riemann
+sum over $800$ $s$-cells; the Gaussian truncation contributes $|g|\erfc(c_c'/\sqrt2)$.
+\item \emph{Mid region, $\eta_0<|\eta|\le2$.} The bound $\Re(\Xi(0)-\Xi(\eta))\ge d_k\eta^2$ on $170$ $\eta$-tiles. On each
+tile, $\sup|G|\le\sup|g(V\vp_\eta)|+\varepsilon_R$. Tiles whose erfc argument exceeds $40$ are bounded jointly, via
+$4e^{V+\bar\omega+\bar R}\cdot170\sqrt{\Xi_2/2d_{\min}}\erfc(40)$.
+\item \emph{Crude terms.} As in \S\ref{sec:lap012}, but with an extra factor $e^V$, because $\Amp$ carries $e^{-V}$. The rate
+is $\kappa=a_5-\gamma-0.8\Li_2(\xi)$. Tiles use $e^{V_{hi}}$; the tail cell uses $V\le a_5X/3$. The script asserts decay
+$c\ge\kappa-\max(a_5/5,a_5/4)$ (tiles), or $c\ge\kappa-a_5/3-a_5/4$ (tail), and $X_{\min}>4.5/c$. $E_2\le10^{-8}$
+everywhere.
+\end{itemize}
+
+\emph{Range of $X$.} $X=5n/V\ge4105/V$ for $n\ge821$. $\lambda\ge4$ gives $m-1/6-5n\ge15n+23/6>3VX$, so $X>3V/a_5$. Per
+tile, $X_{\min}=\max(4105/V_{hi},3V_{lo}/a_5)$. For the tail cell, $X\ge X^*=\sqrt{15\cdot821/a_5}=216.3$.
+
+\begin{lemma}[classes $3$--$4$]\label{lem:lap34}
+\begin{enumerate}
+\item On $500$ tiles of width $0.02$ covering $V\in[2,12]$ (last tile snapped to $[11.98,12]$), $|\Delta|<-g(V)$ with $0$
+failures; the minimum margins $-g-|\Delta|$ are $0.8363$ (class $3$) and $0.8361$ (class $4$), on the tile $[11.98,12]$
+(window $0.119$, mid $0.005$, $\varepsilon_R$ $0.042$).
+\item On the analytic tail cell $V\ge V_T=11.99$, the margin is $0.8146$ for both classes ($0.81456$). The tail cell uses the
+strip bounds of \S\ref{sec:lap012} together with $|g(V\vp_\eta)-g(V)|\le2\varepsilon_g(V_T)$ and
+$|g(V)|\ge1-\varepsilon_g(V_T)$, where $\varepsilon_g(11.99)=1.787\cdot10^{-5}$; since $\varepsilon_g$ decreases, these
+bounds hold for every $V\ge11.99$. The tail cell overlaps the last tile on $[11.99,12]$.
+\end{enumerate}
+The certified relative error is therefore at most $0.19$.
+\cert{lap34\_cert.py 2.0 12.0 0.02; lap34\_cert.py tail 11.99}{third/logs/lap34\_cert.log}
+\end{lemma}
+
+\emph{Validation (not part of the proof).} \texttt{lap34\_validate.py}: $70$ exact points at $n=150,300,821,2000$, with
+$\mu$ up to $0.1050$ and $\lambda$ down to $4.0$; the true $|c/\Amp-g|$ lies in $1.8\cdot10^{-4}$--$1.6\cdot10^{-2}$, which
+is $24$--$435\times$ below the certified bound, and every sign is negative. Two audits checked a further $36$ and $31$
+points with independent exact code (the second by a multi-modular CRT method that shares no code with the others), up to
+$n=5000$ and $V=46.8$, including points straddling the tile/tail junction: every sign negative, true error $28$--$579\times$
+below the certified bound.
+
+\subsubsection{Coverage lemma for the saddle}\label{sec:t-sadcov}
+Write $A(V):=\alpha(V)/V^2$. Then $A$ is continuous, $A\to1/5$ as $V\to0$, and $A\to0$ as $V\to\infty$; and $\alpha$ is
+increasing, since $\alpha'=Vq(V)/5$ with $q=1/(e^V-1)-5/(e^{5V}-1)>0$.
+
+\begin{lemma}\label{lem:t-sadcov}
+$A\ge0.04424$ on $[0.001,2]$ ($5858$ tiles, using $A\ge\alpha(v_1)/v_2^2$) and $A\ge0.1998$ on $(0,0.001]$.
+\cert{cls012\_cov.py}{third/logs/cls012\_cov.log}
+\end{lemma}
+
+For classes $0$--$2$ the saddle equation is $A(V)=(m-1/6)/(25n^2)<0.4\mu$; for classes $3$--$4$ it is
+$A(V)=(m-1/6-5n)/(25n^2)$, which is smaller still. When $\mu<0.105$, the right-hand side is $<0.042$. By the intermediate
+value theorem a root exists, and every root has $V>2$. The representation is exact for every $W>0$, so any root may be
+used.
+
+%---------------------------------------------------------------------
+\subsection{The centre, \texorpdfstring{$\mu\ge0.105$}{mu >= 0.105}}\label{sec:t-centre}
+%---------------------------------------------------------------------
+
+Throughout this subsection $n\ge821$ and $0.105\le\mu\le\tfrac12$. We use $r=e^{-L/(5n)}$ and
+$q=\omega_5^he^{-\sigma/(5n)}$, with $\sigma=L-iy$, so that $y=5n(\theta-2\pi h/5)$;
+$\Phi_c(s)=\log(1-\omega_5^{hc}e^{-s})$ (principal branch) and $Q=\sum_{c=1}^4\Phi_c=\log\frac{1-e^{-5s}}{1-e^{-s}}$;
+$\Lambda(\sigma)=\int_0^1Q(t\sigma)\,dt$; and $C_h(\sigma)=\sum_c(c/5-\tfrac12)(\Phi_c(\sigma)-\Phi_c(0))$. The starting
+point is Cauchy's formula for the polynomial $P_n$:
+\[
+c(m)=\frac1{2\pi}\int_{-\pi}^{\pi}P_n(re^{i\theta})\,r^{-m}e^{-im\theta}\,d\theta,\qquad r^{-m}=e^{2n\mu L}.
+\]
+
+\subsubsection{Near-peak piece (A): \texorpdfstring{$|y|\le1.1$}{|y| <= 1.1} around \texorpdfstring{$\theta=2\pi h/5$}{theta = 2 pi h/5}, \texorpdfstring{$h=1,\dots,4$}{h = 1..4}}\label{sec:nearpeak}
+
+\begin{lemma}[finite Euler--Maclaurin]\label{lem:t-fem}
+For $0\le a<1$,
+\[
+\sum_{t=0}^{n-1}f(t+a)=\int_0^nf+B_1(a)(f(n)-f(0))+\frac{B_2(a)}2(f'(n)-f'(0))-\int_0^n\frac{\tilde B_2(x-a)}2f''(x)\,dx .
+\]
+\end{lemma}
+\begin{proof}
+Apply the Euler--Maclaurin formula of order $2$ with offset $a$ on each $[t,t+1]$ and sum over $t$; the argument is the same
+as for Lemma~\ref{lem:t-em}, but on a finite range.
+\end{proof}
+The constants are $B_2(1/5)=B_2(4/5)=1/150$ and $B_2(2/5)=B_2(3/5)=-11/150$. Since $\tilde B_2\in[-1/12,1/6]$, the last
+term is at most $\frac1{12}\int|f''|$. The identity was checked numerically to $10^{-15}$.
+
+\begin{lemma}\label{lem:t-logS}
+Apply Lemma~\ref{lem:t-fem} to $f(x)=\Phi_c(x\sigma/n)$ with $a=c/5$, and sum over $c$. The terms $k=5t+c$, $t<n$, are
+exactly the factors of $P_n$. This gives
+\[
+\big|\log P_n(q)-n\Lambda(\sigma)-C_h(\sigma)\big|\le\frac{K_h(\sigma)}n,
+\]
+where
+\[
+K_h=\sum_c\Big[\frac{|B_2(c/5)|}2|\sigma|\big(|\Phi_c'(\sigma)|+|\Phi_c'(0)|\big)+\frac{|\sigma|^2}{12}\sup_{t\in[0,1]}|\Phi_c''(t\sigma)|\Big],
+\]
+valid for $|y|<2\pi/5$ and $L\ge0$, uniformly down to $L=0$. The reason is that $\Phi_c$ has no singularity on the segment
+$[0,\sigma]$, because $\omega_5^{hc}\ne1$.
+\end{lemma}
+
+Two exact facts are used: $|e^{C_h(L)}|=1$ for real $L$ (enclosed in the certificate, not assumed), and the four peaks have
+equal modulus exactly. The class margin is then
+\[
+M_s(L)=\sgn_s\Re\sum_h\omega_5^{-hs}e^{C_h(L)},\qquad \sgn_0=+1,\ \sgn_{1,\dots,4}=-1 .
+\]
+
+\emph{Saddle.} $\mu=-\Lambda'(L)/2$. Since $Q'(0)=\sum_c\omega_5^c/(1-\omega_5^c)=-2$, we get $\Lambda'(0)=-1$ and
+$\mu(0)=1/2$.
+
+\begin{lemma}[saddle endpoint]\label{lem:t-saddle}
+$\mu(2.1)<0.105$, by the real mean-value theorem on $4096$ $t$-pieces: the log prints
+\texttt{mu(2.1) = -p'/2 in [0.104 +/- 3.02e-4] < 0.105: True}.
+\cert{centre3\_saddle\_end.py}{third/logs/centre3\_saddle\_end.log}
+\end{lemma}
+(An audit computes $\mu(2.1)=0.103772$ from the closed form, so $L(0.105)=2.0814$.) The near-peak certificate asserts
+$a_L:=\Lambda''(L)>0$ on every $L$-box, so $\mu(L)$ is strictly decreasing. Therefore every $\mu\in[0.105,1/2]$ has a
+unique saddle $L\in[0,2.1]$.
+
+\emph{Laplace step.} Put
+\[
+\cN(n,L)=\frac{e^{n\Lambda(L)+2n\mu L}\sqrt{2\pi/(na_L)}}{10\pi n}.
+\]
+Then
+\[
+c(m)=\cN(n,L)\Big[\sum_{h=1}^4\omega_5^{-hm}e^{C_h(L)}(1+\rho_h)+\mathrm{strip}+\mathrm{OFF}\Big],
+\]
+using $d\theta=dy/(5n)$; the linear phase cancels at the saddle, since $-in\Lambda'(L)y=2in\mu y$; and each peak contributes
+$\cN\omega_5^{-hm}e^{C_h}$. The three error pieces are bounded as follows.
+\begin{itemize}
+\item \emph{Inner window $|y|\le0.35$.} Write $\psi(y)=\Lambda(L-iy)-\Lambda(L)+i\Lambda'(L)y$ and
+$Z=n\psi+na_Ly^2/2+\Delta C$. The odd part $T=n\psi_3y^3+C_1y$ integrates to exactly $0$ against the Gaussian. The rest is
+bounded using $|e^Z-1-Z|\le\frac{|Z|^2}2\max(1,e^{\Re Z})$; $\Re\psi\le-b y^2/2$, where $b$ is a certified lower bound for
+$\Re \Lambda''$ on the window; Taylor constants from $\Lambda^{(k)}(\sigma)=\int_0^1t^kQ^{(k)}(t\sigma)\,dt$, enclosed on
+$t$-pieces; the factor $e^{K/n}-1$ and the Gaussian tail.
+\item \emph{Strip $0.35\le|y|\le1.1$.} Lemma~\ref{lem:t-logS} is combined with
+$\Re\psi(y)=-\int_0^{|y|}(|y|-u)\Re \Lambda''(L-iu)\,du$, with $\Re \Lambda''$ bounded below on boxes. This gives terms of
+the form $\sqrt n\,e^{-nD}$, which are non-increasing for $n\ge1/(2D)$; that condition is asserted. The strip and the
+Gaussian tail are normalised with the upper curvature $a_{up}$, which is the safe direction.
+\item \emph{Uniformity in $n$.} $n$ enters only through $K/n$, the $1/n$ moment terms, the Gaussian tail
+$e^{-nAY^2/2}/\sqrt n$, and the strip. Each of these is non-increasing in $n$. So a bound at $n=N_0=821$ holds for all
+$n\ge821$.
+\end{itemize}
+
+\begin{lemma}[near peak]\label{lem:t-nearpeak}
+On $210$ $L$-boxes of width $0.01$ covering $[0,2.1]$, each with $28$ inner $y$-boxes, $60$ strip $y$-boxes and $64$
+$t$-pieces, every quantity enclosed over its full box, at $N_0=821$: for every box and every class,
+$M_s>\sum_h|e^{C_h}|(\rho_h+\mathrm{strip}_h)=:\mathrm{err}_s$. The worst ratios $\mathrm{err}/\mathrm{margin}$ are
+$0.0566$, $0.2225$, $0.2241$, $0.7977$, $0.8469$ for the classes $0,1,2,3,4$. The minimum slack
+$\min_s(M_{s,lo}-\mathrm{err}_{s,up})$ is $0.018703$, attained for class $4$ on the box $L\in[2.09,2.10]$.
+\cert{centre3\_peak.py 821 210 64 (reproduced inside centre3\_comb.py)}{third/logs/centre3\_peak\_821.log, centre3\_comb\_821.log}
+\end{lemma}
+Since $L(0.105)=2.0814$, only the boxes up to $[2.08,2.09]$ are needed; the last box $[2.09,2.10]$ is certified as well.
+
+\subsubsection{The off-peak lemma (B)}\label{sec:offpeak}
+
+\begin{lemma}[off-peak lemma]\label{lem:offpeak}
+Let $n\ge821$ and $L\in[0,2.1]$, and let $\theta$ satisfy $|5n(\theta-2\pi h/5)|>1.1$ for $h=1,\dots,4$, taken mod $2\pi$.
+Then
+\[
+\log|P_n(e^{-L/(5n)}e^{i\theta})|-n\Lambda(L)\le-\mathcal E(n),\qquad \mathcal E(n)=1.5\log n+6.3\quad(\mathcal E(821)=16.36).
+\]
+\end{lemma}
+Every certificate uses the constant $6.3$ as the exact ball \texttt{arb('6.3')}. The proof occupies the rest of this
+subsection: the $\theta$-circle is covered by the pieces (E), (E0), (N) and (F) below, each certified.
+
+\emph{Closure.} For fixed $n$, $\log|P_n(e^{-L/(5n)}e^{i\theta})|$ is continuous in $(\theta,L)$, with values in
+$[-\infty,\infty)$. So each bound ``$\le n\Lambda(L)-\mathcal E(n)$'' certified on a box also holds on the closure of that
+box. This closes the float-endpoint slivers $|y|\in(1.1,\mathrm{fl}(1.1))$ at the start of (E) and $(\mathrm{fl}(\pi),\pi]$
+at the end of (F) (the Arb run of (F) also closes the latter by ending at \texttt{nextafter(pi, 4)}). The sliver
+$L\in[0.1,\mathrm{fl}(0.1))$ at the lower end of the $L$-boxes of (E), (E0) and (N), where
+$\mathrm{fl}(0.1)=0.1+5.5\cdot10^{-18}$, is closed directly: the lowest $L$-box of these pieces starts at $0.0999$, below the
+exact $0.1$, so $L=0.1$ is inside a certified box and the reduction of Lemma~\ref{lem:monoL} from $L<0.1$ to $L'=0.1$ costs
+exactly $n(0.1-L)\le 0.1\,n$, which is what each piece charges (\texttt{arb('0.1')}).
+
+Since $P_n$ has real coefficients, $|P_n(\bar q)|=|P_n(q)|$, so it suffices to take $\theta\in[0,\pi]$. The pieces (E) and
+(N) use both signs of $y$ near $h=1,2$, which also covers $h=3,4$.
+
+\emph{Closed forms.} For $h\ne0$,
+$\Lambda(\sigma)=\big(\Li_2(e^{-5\sigma})/5-\Li_2(e^{-\sigma})+4\zeta(2)/5\big)/\sigma$, using
+$\sum_{c=0}^4\Li_2(\omega_5^cx)=\Li_2(x^5)/5$. For $h=0$, $\Lambda_0(\sigma)=4(\Li_2(e^{-\sigma})-\zeta(2))/\sigma$. $Q$ is
+decreasing and convex with $|Q'|\le2$: indeed $Q''=[g_2(s/2)-g_2(5s/2)]/s^2$ with $g_2(x)=x^2/\sinh^2x$ decreasing. Since
+$\Lambda'=(Q-\Lambda)/L$, $\Lambda$ is decreasing on $L>0$.
+
+\begin{lemma}[monotonicity in $L$]\label{lem:monoL}
+For $0\le L\le L'$,
+$\log|P_n(re^{i\theta})|\le\log|P_n(r'e^{i\theta})|+n(L'-L)$, where $r=e^{-L/(5n)}$ and $r'=e^{-L'/(5n)}$.
+\end{lemma}
+\begin{proof}
+We have $|1-\varrho e^{ia}|^2=(1-\varrho)^2+4\varrho\sin^2(a/2)$. For $\varrho'\le\varrho\le1$, this gives
+$|1-\varrho e^{ia}|^2\le(\varrho/\varrho')|1-\varrho'e^{ia}|^2$. Take $\varrho=r^k$, $\varrho'=r'^k$, and use
+$\sum_{k\le5n,\,5\nmid k}k=10n^2$: the total factor on $\log|P_n|$ is $\frac12\cdot\frac{L'-L}{5n}\cdot10n^2=n(L'-L)$.
+\end{proof}
+
+Pieces (E), (E0) and (N) are certified on $L\in[0.1,2.1]$. For $L<0.1$ they use Lemma~\ref{lem:monoL} at $L'=0.1$ together
+with $n\Lambda(L)\ge n\Lambda(0.1)$ ($\Lambda$ decreasing, and $y$ unchanged because $\theta$ is fixed). The cost is $0.1n$,
+which the boxes touching $L=0.1$ are required to absorb.
+
+\paragraph{Piece (E): $h\in\{1,2\}$, $1.1\le|y|\le6$.} $\Phi_c$ is analytic on $\Re s>0$ and at $s=0$. So
+Lemma~\ref{lem:t-fem} applies for every $y$, even past $|\sigma|=2\pi/5$; the disc was needed only for the Taylor step in
+\S\ref{sec:nearpeak}. This gives $\log|P_n|\le n\Re \Lambda(\sigma)+\Re C_h(\sigma)+K_h(\sigma)/n$, with the remainder in
+integral form. The certificate uses $20000$ adaptive boxes. On each box it checks
+$\mathcal V(N_0)=-N_0g_E+\Re C+K/N_0+\mathcal E(N_0)<0$, where $g_E=\Lambda(L_{hi})-\Re \Lambda(\sigma)-0.1\chi$, and
+$g_E>1.5/N_0$, so that $\mathcal V(n)$ is non-increasing in $n$. The largest $K$ is $5.6\cdot10^3$, near a singular
+crossing at $L=0.1$. The logged worst values of $\mathcal V(N_0)$ are $-2.49$, $-2.27$ ($h=1$, $y\gtrless0$) and
+$-2.55$, $-2.18$ ($h=2$).
+% Earlier drafts quoted -12.03; that predates extending the lowest L-box to 0.0999 (which widens it and loosens the bound).
+\cert{offpeak\_em.py 821 6.0 32}{third/logs/offpeak\_em\_821.log}
+
+\paragraph{Piece (E0): $h=0$, $|y|\le20$.} Here $\Phi=\log(1-e^{-s})$ is singular at $0$, so the $t=0$ terms are split
+off and Lemma~\ref{lem:t-fem} is applied on $t=1,\dots,n-1$; note $\sum_cB_1(c/5)=0$. This gives
+\[
+\log|P_n|\le n\Re \Lambda_0(\sigma)+\Psi_0(\varsigma)+0.08\big(|\varsigma\Phi'(\varsigma)|+|\varsigma||\Phi'(\sigma)|\big)
++\frac{|\varsigma||\sigma|}3\int_{1/n}^1|\Phi''(t\sigma)|\,dt,
+\]
+where $\varsigma=\sigma/n$,
+$\Psi_0(\varsigma)=4+\log(24/625)+\sum_c\Re\ell(c\varsigma/5)-4\Re[\varsigma^{-1}\int_0^\varsigma\ell]$ and
+$\ell(s)=\log((1-e^{-s})/s)$. The $\log|\varsigma|$ terms cancel exactly. For $\Re s\ge0$ and $|s|\le0.1$:
+$|(1-e^{-s})/s-1|\le|s|e^{|s|}/2$, hence $|\ell(s)|\le|s|$; $|s\Phi'(s)|\le1/(1-|s|e^{|s|}/2)$; and
+$|\Phi''(s)|\le1/(|s|^2m_0^2)$, with $m_0=1-|s|e^{|s|}/2$. Consequently $\Psi_0\le0.7403+6|\sigma|/N_0$. The certificate uses
+$4945$ boxes, and the worst value is $\mathcal V=-0.23$; this is a bisection artefact, as the true slack is in the hundreds.
+\cert{offpeak\_em0.py 821 20 32}{third/logs/offpeak\_em0\_821.log}
+
+\paragraph{Piece (N): $6\le|y|\le0.25n$ ($20\le y$ for $h=0$).} Since $|q|<1$,
+\[
+\log|P_n|=-\Re\sum_jG_j/j\le\sum_j|G_j|/j,\qquad G_j=\frac{(1-e^{-j\sigma})A_j}{1-e^{-j\varsigma}},\qquad
+A_j=\sum_c\omega_5^{hcj}e^{-cj\varsigma/5},
+\]
+with $\varsigma=\sigma/n$; $A_j$ is the sum over the four $c$ for fixed $j$ (the factor $1-e^{-j\sigma}$ comes from summing
+the geometric series over $t<n$). The bounds on $A_j$ are $|A_j|\le\min(4,\bar A_j+2j|\varsigma|)$ and
+$|A_j|\le\alpha_N(jL/n)$ with $\alpha_N(a)=\sum_ce^{-ca/5}$, where $\bar A_j=|\sum_c\omega_5^{hcj}|$ is $1$ or $4$.
+\begin{itemize}
+\item \emph{Part I, $j\le\pi n/y$.} Use $1/|1-e^{-z}|\le1/|z|+c_1$ with $c_1=1+1/\pi$. This is the maximum modulus of
+$1/(1-e^{-z})-1/z$ on the rectangle $[0,20]\times[-\pi,\pi]$: it is at most $0.593$ on the left edge, $1+1/\pi$ on the top
+and bottom edges, and $1.06$ on the right edge. Every $z=j\varsigma$ in Part I lies in the rectangle, since
+$|\Im z|=jy/n\le\pi$ and $\Re z=jL/n\le\pi L/y\le1.1$. This gives Part I $\le nM_N(\sigma)+R_1$, where
+$M_N(\sigma)=\sum_j|1-e^{-j\sigma}|\bar A_j/(j^2|\sigma|)$ and $R_1\le B_N\big(1+\log(\pi n/y)\big)+O(1)$, with
+$B_N=2+1.6c_1$ for $h\ne0$ and $B_N=2+4c_1$ for $h=0$.
+\item \emph{Part II, $j>\pi n/y$.} Split the $j$ into periods $k\ge1$, with $jy/n\in((2k-1)\pi,(2k+1)\pi]$. Write
+$a=jL/n$ and $b=jy/n$, so that $j\varsigma=a-ib$. On period $k$: $1/j\le y/((2k-1)\pi n)$;
+$|1-e^{-j\varsigma}|\ge\max\big(1-e^{-a},\ 2e^{-a/2}|\sin(b/2)|\big)$; $|\sin(b/2)|\ge|b-2\pi k|/\pi$ on the period. The two
+$j$ nearest the pole $b=2\pi k$ are bounded by $G_k=1/(1-e^{-a_k^-})$, where $a_k^-$ is the smallest $a$ on the period. The
+other $j$ on the period are bounded through $|\sin(b/2)|$ and summed with
+$\sum_{i\le M'}\min(G,D/i)\le\min\big(M'G,\ D(1+\log^+(2M'G/D))\big)$. Consequently: summed over $k$, the pole terms total
+at most $\beta u^2n/L$, with $u=y/n$ and $\beta=1+e^{-\pi L/u}$; the remaining terms of the periods total $O(\log^2n)$; the
+periods with $a_k^->2$ give a constant tail, bounded with $\int_2^\infty\phi(a)/a\,da$ in closed form. Part II is
+non-increasing in $n$ at fixed $(L,y)$: $M'/n$, $D/n$ and $\log^+(2M'G/D)$ do not increase, and $\beta_k$ decreases. (N)
+stops at $u=0.25$ because the pole term $\beta u^2/L$ must stay below $\Lambda(L)-0.1$ at $L=0.1$. The triangle-bound
+majorant blows up at low-denominator rationals such as $\theta=\pi$ and $2\pi/3$, and that is where (F) takes over.
+\end{itemize}
+The certificate has two parts: \textbf{(N-a)} $y\in[Y_E,200]$ on $(L,y)$-boxes, at $N_0$, with the exact $M_N(\sigma)$
+($400$ terms plus a tail) and slope check $g\ge(B_N+1.5)/N_0$ (monotonicity in $n$ follows from $R_1=A+B_N\log n$, Part II
+being non-increasing, and the slope condition); \textbf{(N-b)} $y\in[200,0.25n]$ on $(L,u)$-boxes, in the form
+$-nG+a+b\log n+c\log^2n$ with $G\ge(b+2c\log N_0)/N_0$. The worst values are $-147.9/-23.3$ for $h=1$ and $-71.3/-1.8$
+for $h=0$. The script runs only $h\in\{0,1\}$ with $y>0$. This suffices: the majorant depends on $h$ only through
+$\bar A_j$, which equals $1$ if $5\nmid j$ and $4$ if $5\mid j$ for every $h=1,\dots,4$, and it depends on $y$ only through
+$|1-e^{-j\sigma}|$, $|\sigma|$ and $|y|$, all invariant under $y\mapsto-y$.
+\cert{offpeak\_tb.py 821 0.25}{third/logs/offpeak\_tb\_821.log}
+
+\paragraph{Piece (F): $\operatorname{dist}(\theta,\{0,2\pi/5,4\pi/5\})\ge0.0499$, $\theta\le\pi$, $L\in[0,2.1]$.}
+The chunk length is $T=40$ on the bands $0.05\le\operatorname{dist}<0.1$ and $T=20$ elsewhere. Put $M_T=\lfloor n/T\rfloor$,
+$\lambda_T=TL/n$, $\mu_r=L/(5n)$ and $\Pi(Z)=\prod_{k'\le5T,\,5\nmid k'}(1-Ze^{ik'\tilde\theta})$ with
+$\tilde\theta=\theta+i\mu_r$. Here the radial drift $r^{k'}$ appears as an imaginary shift of $\theta$.
+
+\begin{lemma}[chunk lemma]\label{lem:chunk}
+\[
+\log|P_n|\le\sum_{m'<M_T}\cB(m'\lambda_T)+4(T-1)\log(1+e^{-(L-\lambda_T)}),\qquad\cB(s)=\max_{|Z|=e^{-s}}\log|\Pi(Z)|,
+\]
+\[
+n\Lambda(L)\ge\sum_{m'<M_T}TQ(m'\lambda_T)-T\big[\lambda_T+(\log5-Q(L))/2\big].
+\]
+\end{lemma}
+\begin{proof}
+Write $n=M_TT+r_T$ with $0\le r_T<T$. For $m'<M_T$, the factors with $5Tm'<k\le5T(m'+1)$ form one chunk: with $k=5Tm'+k'$
+and $Z_{m'}=q^{5Tm'}$, the chunk equals $\Pi(Z_{m'})$ with $|Z_{m'}|=e^{-m'\lambda_T}$, so its log-modulus is at most
+$\cB(m'\lambda_T)$. This holds for every $n$, whether or not $T\mid n$. The factors with $5TM_T<k\le5n$ and $5\nmid k$ are
+left over; there are $4r_T\le4(T-1)$ of them. Each satisfies $|1-q^k|\le1+e^{-kL/(5n)}$, and $kL/(5n)>TM_TL/n>L-\lambda_T$
+because $TM_T>n-T$. So the leftover factors cost at most $4(T-1)\log(1+e^{-(L-\lambda_T)})$. The second line uses the
+tangent line of $Q$ at each $m'\lambda_T$, convexity telescoping $-Q'(m'\lambda_T)\lambda_T\le Q((m'-1)\lambda_T)-Q(m'\lambda_T)$,
+$|Q'|\le2$ for the $m'=0$ term, $Q>0$, and $M_T\lambda_T\le L$.
+\end{proof}
+
+\emph{Reductions.} $\cB$ is convex and non-increasing in $s$ (Hadamard three circles). So on an $s$-grid of step $0.1$,
+$\cB$ is below its chord and $TQ$ is above its tangent, which gives cell lower bounds $d_i$. $\sup_Z\log|\Pi|$ is
+subharmonic in $\tilde\theta$, since $\Pi$ is entire in $\tilde\theta$; so on each rectangle
+$[\theta_a,\theta_b]\times[0,\mu_{\max}]$, with $\mu_{\max}=2.1/(5N_0)$, the maximum is attained on the boundary, and the
+drift needs no interior treatment. The assembly uses left Riemann sums of the running minimum of $d_i$; for small $L$ it
+uses $M_Td_{\min}$ instead. It is checked on the $L$-intervals $[i/100,(i+1)/100]$, $i=0,\dots,209$, which cover $[0,2.1]$
+including $L=0$, at $N_0$, with the slope condition, so it holds for all $n\ge N_0$.
+
+\begin{lemma}[piece (F)]\label{lem:pieceF}
+On $163$ rectangles and $22$ $s$-values, in Arb ball arithmetic over dyadic cells, the assembled margin is positive on every
+rectangle; the minimum is $47.91$ (piece $7$, rectangle $26$, ending at $\pi^+$, $T=20$). The tightest $T=40$ band has margin
+$51.8$.
+\cert{offpeak\_chunk\_arb.py 821 \$p (p=0,\dots,7), then offpeak\_chunk\_arb.py summarize}{third/logs/arb\_F\_summary\_full.log (merging the 13 logs arb\_F\_p*.log)}
+\end{lemma}
+The same bound was first certified in float64 interval arithmetic with directed-rounding margins (only correctly rounded
+$+,-,\times,\div$ and exact \texttt{frexp}/\texttt{ldexp}; transcendental inputs from Arb with explicit margins),
+with identical minimum margin $47.9$ (\texttt{offpeak\_chunk.py 821 all}, log \texttt{offpeak\_chunk\_821.log}); the Arb
+certificate supersedes it and also fixes the endpoint $\pi$ and an inexact key in the assembly. An early exit in the Arb
+cell test that could only reject cells, never accept them, stalled the first runs; it was removed, and every rectangle
+logged before the fix remains valid (an audit re-ran $11$ of them, including the worst, with identical margins).
+
+\emph{Coverage of the $\theta$-circle.} The pieces meet or overlap at every handover: (A)--(E) abut at $|y|=1.1$ (the
+statement has a strict $>$); (E)--(N) abut at $|y|=6$; (E0)--(N) abut at $y=20$; (N-a)--(N-b) meet at $y=200$, which needs
+$0.25n\ge200$, i.e.\ $n\ge800$; (N)--(F): (N) reaches $|\theta-2\pi h/5|=0.25n/(5n)=0.05$ for every $n$, and (F) starts at
+$0.0499$, an overlap of $10^{-4}$ rad. The root $6\pi/5$ is $0.63$ away from $\pi$, so $[0,\pi]$ needs no exclusion around it.
+The (F) rectangles tile each piece exactly, and the pieces abut exactly. The float-endpoint slivers are closed by the
+closure remark. This proves Lemma~\ref{lem:offpeak}.
+
+\emph{Spot validation (not part of the proof).} $312$ random points and, in a second audit, $5570$ adversarial points (for
+$n$ from $821$ to $10^5$, window edges, box endpoints, $L$ down to $10^{-9}$, located local maxima) were evaluated with
+exact Arb full products: $0$ violations; the smallest true slack is $43.18$, at $n=821$, $L=2.1$, $|y|=1.1^+$.
+
+\subsubsection{Combination}\label{sec:comb}
+On the off-peak set, Lemma~\ref{lem:offpeak} gives $|P_nr^{-m}|\le e^{n\Lambda(L)+2n\mu L-\mathcal E(n)}$. The set has
+measure at most $2\pi$, so
+\[
+|\mathrm{OFF}|\le\frac{1}{\cN}\cdot\frac{2\pi}{2\pi}e^{n\Lambda+2n\mu L-\mathcal E(n)}=10\pi n\sqrt{\frac{na_L}{2\pi}}\,e^{-\mathcal E(n)}
+=10\pi\sqrt{\frac{a_L}{2\pi}}\,e^{-6.3}.
+\]
+The powers of $n$ cancel exactly, so this bound is independent of $n$. It grows with $a_L=\Lambda''(L)$. The largest
+$a_L$ occurs at $L=0$, where $a_L=2/3$, while the minimum slack of Lemma~\ref{lem:t-nearpeak} occurs at $L\approx2.1$; so
+the comparison must be made per $L$-box.
+
+\begin{lemma}[combination]\label{lem:comb}
+On every one of the $210$ $L$-boxes and for every class $s$, with
+$\mathrm{OFF}_{up}=10\pi\sqrt{a_{up}/2\pi}\,e^{-6.3}$ computed in Arb with the exact constant \texttt{arb('-6.3')}, the
+program asserts $M_{s,lo}-\mathrm{err}_{s,up}-\mathrm{OFF}_{up}>0$ in Arb. Over all boxes and classes the minimum of
+slack minus OFF is $0.010043$, on the box $[2.09,2.10]$ (slack $0.018703$, OFF $0.008660$); on the last box actually
+needed, $[2.08,2.09]$, it is $0.0120$ ($0.020699-0.008696$).
+\cert{centre3\_comb.py 821 210 64 0 105; centre3\_comb.py 821 210 64 105 210}{third/logs/centre3\_comb\_821.log}
+\end{lemma}
+
+\begin{corollary}\label{cor:centre}
+For $n\ge821$, $\mu\in[0.105,\tfrac12]$ and every class, $c(m)$ has the conjectured sign.
+\end{corollary}
+\begin{proof}
+Lemmas~\ref{lem:t-saddle}, \ref{lem:t-nearpeak}, \ref{lem:offpeak} and~\ref{lem:comb}.
+\end{proof}
+
+\emph{Validation (not part of the proof).} An audit evaluated $c(m)/\cN$ by quadrature on the windows, validated against
+exact coefficients at $n=300$ (35 points, agreement to $4\cdot10^{-11}$), and then checked $120$ points at $n=821$, $857$
+and $900$, with $\mu\in\{0.105,0.15,0.2,0.3,0.4,0.45,0.49,0.5\}$ and all five classes: every sign correct; realised error at
+most $1.65\cdot10^{-3}$ (at most $4.7\cdot10^{-4}$ in classes $3$ and $4$), against a certified $\mathrm{err}$ of
+$0.06$--$0.21$.
+
+%---------------------------------------------------------------------
+\subsection{Coverage and proof of Theorem~\ref{thm:third-main}}\label{sec:t-coverage}
+%---------------------------------------------------------------------
+
+\begin{theorem}[coverage]\label{thm:t-coverage}
+Let $n\ge980$ and $0\le m\le5n^2$. Then $(n,m)$ is covered by at least one of the following: the band certificates of
+\S\ref{sec:t-band} (if $\lambda<4$); the Laplace certificates of \S\ref{sec:t-laplace} (if $\lambda\ge4$ and $\mu<0.105$);
+the centre certificate of \S\ref{sec:t-centre} (if $\mu\ge0.105$). Each certificate that applies proves the conjectured
+sign of $c_n(m)$.
+\end{theorem}
+\begin{proof}
+The three conditions partition $\{0\le m\le5n^2\}$. ($\lambda\ge4$ is automatic when $\mu\ge0.105$, since
+$m\ge1.05n^2>4(5n+1)$ for $n\ge22$, but it is not needed.) It remains to check that each certificate's hypotheses hold on
+its whole region.
+\begin{enumerate}
+\item \emph{Band, $m<4N$.} Classes $3,4$: Corollary~\ref{cor:t-block} covers $m<2N$ for every $n$; for $2N\le m<4N$, the
+exact computation covers $n\le2000$ and $\Psi$ covers $n>2000$. Classes $0,1,2$: the exact computation covers $n\le2000$,
+and Lemma~\ref{lem:t-band012} covers $n>2000$. The only threshold is $n\ge291$ for the exact band run, which holds.
+\item \emph{Laplace, $\lambda\ge4$, $\mu<0.105$.} By \S\ref{sec:t-sadcov} the saddle equation, for either class family,
+has a root, and every root satisfies $V>2$. Fix a root. Then $W=V/(5n)$, the representation of \S\ref{sec:t-repr} is
+exact, and $X=5n/V$. If $V\in[2,12]$, $V$ lies in one of the $500$ tiles $[V_{lo},V_{hi}]$; for both class families the
+tiles are contiguous and the last tile is snapped to end exactly at $12$. Classes $0$--$2$: $X\ge1455/V_{hi}$, since
+$n\ge291$, and $X\ge4V_{lo}/a_5$, since $\lambda\ge4$; so $X\ge X_{\min}$ of the tile. Classes $3$--$4$:
+$X\ge4105/V_{hi}$, since $n\ge821$, and $X>3V_{lo}/a_5$, since $\lambda\ge4$. If $V\ge11.99$, the tail cell applies; for
+both class families it is run from $V_T=11.99$, so it overlaps the last tile. It needs $X\ge4V/a_5$ (classes $0$--$2$) or
+$X\ge X^*=216.3$ together with $V\le a_5X/3$ (classes $3$--$4$), and these follow from the same two inequalities. Every
+certificate term is non-increasing in $X$, so the tile's certified inequality holds at this $X$. The thresholds are
+$n\ge291$ (classes $0$--$2$) and $n\ge821$ (classes $3$--$4$), both below $980$.
+\item \emph{Centre, $\mu\ge0.105$.} Since $m\le5n^2$, $\mu\le\tfrac12$. By \S\ref{sec:nearpeak}, $\mu\mapsto L$ is a
+bijection from $[0.105,\tfrac12]$ onto $[0,L(0.105)]\subset[0,2.09]$ (since $L(0.105)=2.0814$), and every $L$-box in
+$[0,2.1]$ is certified at $N_0=821$ for all $n\ge821$. The integration circle is split into the four near-peak windows
+$|y_h|\le1.1$ and their complement. The complement is covered by (E), (E0), (N) and (F), with the handovers listed in
+\S\ref{sec:offpeak} and the closure remark for the float endpoints, and Lemma~\ref{lem:offpeak} holds there. The per-box
+combination of Lemma~\ref{lem:comb} then gives the sign. The threshold is $n\ge821$.
+\end{enumerate}
+So all thresholds ($291$, $821$, and $2000$ for the switch between exact and analytic in the band) are satisfied or bridged
+for $n\ge980$. The boundaries $\lambda=4$ and $\mu=0.105$ are assigned to the Laplace region and the centre respectively.
+Each certificate includes its closed boundary: the Laplace certificates use $\lambda\ge4$, and the centre uses
+$\mu\ge0.105$ through $\mu(2.1)<0.105$. So nothing is left out.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:third-main}]
+By Lemma~\ref{lem:palin} it suffices to take $0\le m\le5n^2$. For $n\le979$ the result is Theorem~\ref{thm:t-exact}. For
+$n\ge980$ it follows from Theorem~\ref{thm:t-coverage}, together with Corollaries~\ref{cor:t-band34}
+and~\ref{cor:t-band012}, Lemmas~\ref{lem:lap012-tiles}, \ref{lem:lap012-tail} and~\ref{lem:lap34}, and
+Corollary~\ref{cor:centre}. The analytic inputs are Theorem~\ref{thm:G5}, the elementary lemmas proved above, and the
+standard facts of Appendix~\ref{app:facts}.
+\end{proof}
